@@ -351,8 +351,8 @@ class ComposerStaticInit15f07ce02e558cf13ab097674378da57
         ),
         'Psr\\Http\\Message\\' => 
         array (
-            0 => __DIR__ . '/..' . '/psr/http-message/src',
-            1 => __DIR__ . '/..' . '/psr/http-factory/src',
+            0 => __DIR__ . '/..' . '/psr/http-factory/src',
+            1 => __DIR__ . '/..' . '/psr/http-message/src',
         ),
         'Psr\\Http\\Client\\' => 
         array (
@@ -564,6 +564,17 @@ class ComposerStaticInit15f07ce02e558cf13ab097674378da57
         'App\\Http\\Middleware\\TrustHosts' => __DIR__ . '/../..' . '/app/Http/Middleware/TrustHosts.php',
         'App\\Http\\Middleware\\TrustProxies' => __DIR__ . '/../..' . '/app/Http/Middleware/TrustProxies.php',
         'App\\Http\\Middleware\\VerifyCsrfToken' => __DIR__ . '/../..' . '/app/Http/Middleware/VerifyCsrfToken.php',
+        'App\\Models\\Api\\Product' => __DIR__ . '/../..' . '/app/Models/Api/Product.php',
+        'App\\Models\\Api\\User' => __DIR__ . '/../..' . '/app/Models/Api/User.php',
+        'App\\Models\\CartItem' => __DIR__ . '/../..' . '/app/Models/CartItem.php',
+        'App\\Models\\Country' => __DIR__ . '/../..' . '/app/Models/Country.php',
+        'App\\Models\\Customer' => __DIR__ . '/../..' . '/app/Models/Customer.php',
+        'App\\Models\\CustomerAddress' => __DIR__ . '/../..' . '/app/Models/CustomerAddress.php',
+        'App\\Models\\Order' => __DIR__ . '/../..' . '/app/Models/Order.php',
+        'App\\Models\\OrderDetail' => __DIR__ . '/../..' . '/app/Models/OrderDetail.php',
+        'App\\Models\\OrderItem' => __DIR__ . '/../..' . '/app/Models/OrderItem.php',
+        'App\\Models\\Payment' => __DIR__ . '/../..' . '/app/Models/Payment.php',
+        'App\\Models\\Product' => __DIR__ . '/../..' . '/app/Models/Product.php',
         'App\\Models\\User' => __DIR__ . '/../..' . '/app/Models/User.php',
         'App\\Providers\\AppServiceProvider' => __DIR__ . '/../..' . '/app/Providers/AppServiceProvider.php',
         'App\\Providers\\AuthServiceProvider' => __DIR__ . '/../..' . '/app/Providers/AuthServiceProvider.php',
