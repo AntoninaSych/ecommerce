@@ -1,0 +1,281 @@
+---
+
+- cron:
+    name: "{{ project_name }} - Laravel Artisan Scheduler"
+    job: "php {{ app_root_dir }}/artisan schedule:run >> /dev/null 2>&1"
+    user: root
+
+- cron:
+    name: "{{ project_name }} - Keep debug disabled on public-facing sites to prevent information disclosure"
+    job: "sed -i -e \\'s/^APP_DEBUG=\"\\?\\(true\\|TRUE\\)\"\\?/APP_DEBUG=\"false\"/\\' /vagrant/.env"
+    user: root
+    minute: "*/15"
+    hour: "*"
+    day: "*"
+    month: "*"
+    weekday: "*"
+  when: app_env != 'local'
+
+- name: Install PHP Modules
+  apt:
+    name:
+      - php{{ php_ver }}-dom
+      - php{{ php_ver }}-iconv
+      - php{{ php_ver }}-xml
+      - php{{ php_ver }}-zip
+      # Check the PHP role for default extensions.
+      # - php{{ php_ver }}-odbc # uncommon
+      # - php{{ php_ver }}-tidy # uncommon
+      # - php{{ php_ver }}-gd
+    state: present
+  notify: Restart PHP
+
+- name: Create mysql user
+  mysql_user:
+    login_host: localhost
+    login_user: root
+    login_password: password
+    name: "{{ db_app_user }}"
+    password: "{{ db_app_password }}"
+    priv: "*.*:ALL"
+    host: "{{ item }}"
+  with_items:
+    - "{{ ansible_hostname }}"
+    - 127.0.0.1
+    - ::1
+    - localhost
+  become: yes
+  become_user: root
+  when: app_env == 'local'
+
+- name: Disable Foreign Key Checks (for database deletion without a fuss)
+  mysql_variables:
+    login_host: localhost
+    login_user: root
+    login_password: password
+    variable: foreign_key_checks
+    value: 0
+  become: yes
+  become_user: root
+  when: app_env == 'local'
+
+- name: Drop any previous local database
+  mysql_db:
+    name: "{{ db_app_database }}"
+    state: absent
+    login_host: localhost
+    login_user: "{{ db_app_user }}"
+    login_password: "{{ db_app_password }}"
+  when: app_env == 'local'
+
+- name: Re-enable Foreign Key Checks
+  mysql_variables:
+    login_host: localhost
+    login_user: root
+    login_password: password
+    variable: foreign_key_checks
+    value: 1
+  when: app_env == 'local'
+
+- name: Create application database
+  mysql_db:
+    name: "{{ db_app_database }}"
+    state: present
+    login_host: localhost
+    login_user: "{{ db_app_user }}"
+    login_password: "{{ db_app_password }}"
+    #    collation: utf8mb4
+    #    encoding: utf8mb4_unicode_ci
+  when: app_env == 'local'
+
+- name: Supervisor Installation
+  apt:
+    name: supervisor
+    update_cache: yes
+    cache_valid_time: 3600
+    state: present
+
+- name: Supervisor Configured for Queue Workers
+  template:
+    src: "queue-supervisor.j2"
+    dest: /etc/supervisor/conf.d/{{ project_name }}.conf
+    owner: root
+    group: www-data
+    mode: 0774
+
+- name: Set the default nginx host configuration for local development
+  template:
+    src: nginx/app.conf.j2
+    dest: "/etc/nginx/sites-available/default"
+  notify: Restart Nginx
+  when: app_env == 'local'
+
+- name: Set the nginx host configuration
+  template:
+    src: nginx/app.conf.j2
+    dest: "/etc/nginx/sites-available/{{ project_name }}"
+  notify: Restart Nginx
+  when: app_env != 'local'
+
+- name: Symlink sites-available vhost to sites-enabled
+  file:
+    dest: "/etc/nginx/sites-enabled/default"
+    src: "/etc/nginx/sites-available/default"
+    state: link
+    force: yes
+  when: app_env == 'local'
+
+- name: Symlink sites-available vhost to sites-enabled
+  file:
+    dest: "/etc/nginx/sites-enabled/{{ project_name }}"
+    src: "/etc/nginx/sites-available/{{ project_name }}"
+    state: link
+    force: yes
+  when: app_env != 'local'
+
+- name: Clear composer cache before installing/updating
+  shell: composer clear-cache
+  become: yes
+  become_user: "{{ ansible_ssh_user }}"
+
+- name: Check for id_rsa on host machine
+  stat:
+    path: "{{ app_root_dir }}/provision/private/id_rsa"
+  register: id_rsa_file
+
+- name: Copy id_rsa to vbox user's .ssh
+  copy:
+    src: "{{ app_root_dir }}/provision/private/id_rsa"
+    dest: "/home/{{ ansible_ssh_user }}/.ssh/"
+    owner: "{{ ansible_ssh_user }}"
+    group: "{{ ansible_ssh_user }}"
+    mode: '0700'
+  when: app_env == 'local' and id_rsa_file.stat.exists
+
+#- name: Add Bitbucket to known_hosts file
+#  known_hosts:
+#    path: /etc/ssh/ssh_known_hosts
+#    name: bitbucket.org
+#    key: "{{ lookup('pipe', 'ssh-keyscan -trsa bitbucket.org') }}"
+
+- name: Add Bitbucket as a known host
+  known_hosts:
+    name: bitbucket.org
+    key: bitbucket.org,104.192.141.1 ssh-rsa ED2EC9971C0FB3011
+    path: /etc/ssh/ssh_known_hosts
+    state: present
+
+- name: Install Composer Packages/Libraries for development
+  composer:
+    command: install
+    working_dir: "{{ app_root_dir }}"
+    no_dev: no
+    no_scripts: yes
+    no_plugins: yes
+  become: yes
+  become_user: "{{ ansible_ssh_user }}"
+  when: app_env == 'local'
+
+- name: Install Composer Packages/Libraries (optimized, no development)
+  composer:
+    command: install
+    working_dir: "{{ app_root_dir }}"
+    no_dev: yes
+    no_scripts: yes
+    no_plugins: yes
+    optimize_autoloader: yes
+  become: yes
+  become_user: "{{ ansible_ssh_user }}"
+  when: app_env != 'local'
+
+- name: Environment Configuration
+  template:
+    src: .env.j2
+    dest: "{{ app_root_dir }}/.env"
+
+- name: Run migrations (artisan migrate --force)
+  shell: php {{ app_root_dir }}/artisan migrate --force
+
+- name: Insert test data (artisan db:seed)
+  shell: php {{ app_root_dir}}/artisan db:seed
+  when: app_env == 'local'
+
+- name: Re-read the supervisor configurations
+  shell: "supervisorctl reread"
+  become: yes
+  become_user: root
+
+- name: update supervisor with the new configuration
+  shell: "supervisorctl update"
+  become: yes
+  become_user: root
+
+- name: restart supervisor process
+  shell: "supervisorctl restart {{ project_name }}-queue:*"
+  become: yes
+  become_user: root
+
+- name: Set write permissions for app storage
+  file:
+    path: "{{ app_root_dir }}/storage"
+    owner: "{{ ansible_ssh_user }}"
+    group: www-data
+    mode: 01775
+
+- name: Add www-data to application owner's group
+  user:
+    name: www-data
+    append: true
+    groups:
+      - "{{ ansible_ssh_user }}"
+
+- name: Restart nginx
+  shell: service nginx restart
+
+- name: Ensure app log file exists
+  copy:
+    content: ""
+    dest: "{{ app_root_dir }}/storage/logs/laravel.log"
+    force: no
+    owner: "{{ ansible_ssh_user }}"
+    group: www-data
+    mode: 0775
+
+- name: Ensure Supervisor Queue log exists
+  copy:
+    content: ""
+    dest: "{{ app_root_dir }}/storage/logs/supervisor-queue.log"
+    force: no
+    owner: "{{ ansible_ssh_user }}"
+    group: www-data
+    mode: 0775
+
+# Log Rotate
+- name: Log Rotate Application logs
+  template:
+    src: logrotate-app.j2
+    dest: "/etc/logrotate.d/app-{{ project_name }}"
+
+- name: Add environment status msgs to bash (upon login)
+  blockinfile:
+    path: /home/{{ ansible_ssh_user }}/.bashrc
+    content: |
+      cd {{ app_root_dir }}
+      appenv=$(grep -E "^APP_ENV" .env 2>/dev/null | head -n 1 | cut -d '=' -f 2-)
+      appdebug=$(grep -E "^APP_DEBUG" .env 2>/dev/null | head -n 1 | cut -d '=' -f 2-)
+      currbranch=$(git branch | grep \* | cut -d ' ' -f2)
+      echo -e "\n" \
+              "\n\e[40;38;5;82m{{ project_name }}\e[0m" \
+              "\n\e[40;38;5;82m==================\e[0m" \
+              "\n\e[40;38;5;82m    Env: \e[30;48;5;82m $appenv \e[0m" \
+              "\n\e[40;38;5;82m Branch: \e[30;48;5;82m $currbranch \e[0m" \
+              "\n\e[40;38;5;82m  Debug: \e[30;48;5;82m $appdebug \e[0m" \
+              "\n\e[40;38;5;82m==================\e[0m"
+  when: app_env == 'local'
+
+- name: Clear application view cache
+  shell: php {{ app_root_dir }}/artisan view:clear
+
+# - name: Restart queue (so long-lived workers don't execute on old code)
+- name: Restart Queue
+  shell: php {{ app_root_dir }}/artisan queue:restart

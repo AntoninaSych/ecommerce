@@ -1,0 +1,9 @@
+[program:{{ project_name }}-queue]
+process_name=%(program_name)s_%(process_num)02d
+command=php {{ app_root_dir }}/artisan queue:work --sleep=3 --tries=1
+autostart=true
+autorestart=true
+user=www-data
+redirect_stderr=true
+numprocs=2
+stdout_logfile={{ app_root_dir }}/storage/logs/supervisor-queue.log

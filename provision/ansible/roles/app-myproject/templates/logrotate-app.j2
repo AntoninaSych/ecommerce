@@ -1,0 +1,8 @@
+{{ app_root_dir }}/storage/logs/*.log {
+    weekly
+    missingok
+    rotate 90
+    compress
+    notifempty
+    copytruncate
+}

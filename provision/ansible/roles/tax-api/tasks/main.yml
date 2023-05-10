@@ -1,0 +1,19 @@
+---
+
+# Production
+- lineinfile:
+  path: /etc/hosts
+  regexp: '^10\.1\.1\.183'
+  line: '10.1.1.183 api-lewiston.geiger.com'
+  owner: root
+  group: root
+  mode: 0644
+
+# Dev\QA
+- lineinfile:
+  path: /etc/hosts
+  regexp: '^10\.1\.1\.193'
+  line: '10.1.1.193 api-lewiston-dev.geiger.com'
+  owner: root
+  group: root
+  mode: 0644

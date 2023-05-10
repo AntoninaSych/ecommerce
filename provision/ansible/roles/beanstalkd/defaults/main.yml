@@ -1,0 +1,4 @@
+---
+beanstalkdPersistentStorageLocation: /var/lib/beanstalkd
+beanstalkdListenAddress: 0.0.0.0
+beanstalkdListenPort: 11300

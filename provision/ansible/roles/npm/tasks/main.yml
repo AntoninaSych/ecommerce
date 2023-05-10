@@ -1,0 +1,43 @@
+---
+
+- name: Add nodejs key
+  apt_key:
+    url: "https://deb.nodesource.com/gpgkey/nodesource.gpg.key"
+    state: present
+
+- name: Add nodejs deb source
+  apt_repository:
+    repo: "deb https://deb.nodesource.com/node_{{ nodejs_major_version }}.x focal main"
+    state: present
+    update_cache: yes
+
+- name: Install nodejs
+  apt:
+    name: nodejs
+    state: present
+
+# Prevent Windows from dealing with node_modules long file paths
+# Also prevents duplicate node_modules between guest and host
+# drawback being that a destroyed machine will have to install them again
+
+# Not sure which is more ridiculous:
+# - Windows not supporting long file paths
+# - Node's "organization" of dependencies that cause such long file paths
+
+# - name: Create local vm node_modules directory
+#   file:
+#     path: "/home/vagrant/node_modules_{{ project_name }}"
+#     state: directory
+#     owner: vagrant
+#     group: vagrant
+#     mode: 1777
+#   when: node_modules_on_guest_only
+#
+# - name: Symlink local vm node_modules
+#   file:
+#     src: "/home/vagrant/node_modules_{{ project_name }}"
+#     dest: "{{ app_root_dir }}/node_modules"
+#     owner: vagrant
+#     group: vagrant
+#     state: link
+#   when: node_modules_on_guest_only

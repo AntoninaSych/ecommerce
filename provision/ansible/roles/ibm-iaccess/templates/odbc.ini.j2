@@ -1,0 +1,19 @@
+[GBAS400]
+Description = iSeries Access ODBC Driver DSN for iSeries
+Driver = iSeries Access ODBC Driver
+System = 10.10.2.20
+UserID = {{ db2_user }}
+Password = {{ db2_pass }}
+Naming = 0
+DefaultLibraries = {{ db2_lib }}
+ConnectionType = 0
+CommitMode = 2
+ExtendedDynamic = 0
+DefaultPkgLibrary = {{ db2_lib }}
+DefaultPackage = A/DEFAULT(IBM),2,0,1,0,512
+AllowDataCompression = 1
+LibraryView = 0
+AllowUnsupportedChar = 0
+ForceTranslation = 0
+Trace = 0
+CCSID = 1208

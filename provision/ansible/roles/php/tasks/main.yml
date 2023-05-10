@@ -1,0 +1,30 @@
+---
+
+- name: Add Ondrej's PPA for PHP
+  apt_repository:
+    repo: ppa:ondrej/php
+    state: present
+
+- name: Install php{{ php_ver }}-fpm and modules
+  apt:
+    name:
+          - php{{ php_ver }}-cli
+          - php{{ php_ver }}-fpm
+          - php{{ php_ver }}-mysqlnd
+          - php{{ php_ver }}-curl
+    #       - php{{ php_ver }}-json
+          - php{{ php_ver }}-apcu
+          - php{{ php_ver }}-mbstring
+          - php{{ php_ver }}-bcmath
+          - php{{ php_ver }}-cli
+          - php{{ php_ver }}-curl
+          - php{{ php_ver }}-fpm
+          - php{{ php_ver }}-iconv
+          - php{{ php_ver }}-intl
+          - php{{ php_ver }}-xml
+    state: present
+  notify: Restart PHP
+- name: Set PHP version for shell
+  shell: "update-alternatives --set php /usr/bin/php{{ php_ver }}"
+  become: yes
+  become_user: root

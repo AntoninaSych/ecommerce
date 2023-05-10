@@ -1,0 +1,25 @@
+---
+
+- name: Install the Python mysql module (required for ansible controller / as client)
+  apt:
+    name: python3-mysqldb
+    state: present
+  become: true
+  become_user: root
+
+- name: Install MySQL
+  apt:
+    name: mysql-server
+    update_cache: yes
+    cache_valid_time: 3600
+    state: present
+  become: yes
+  become_user: root
+
+- name: Start the MySQL service
+  service:
+    name: mysql
+    state: started
+    enabled: true
+  become: yes
+  become_user: root

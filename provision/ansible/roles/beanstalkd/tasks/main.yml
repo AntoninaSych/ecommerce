@@ -1,0 +1,41 @@
+---
+
+- name: Install Beanstalkd Package
+  action: apt pkg={{ item }} state=latest
+  with_items:
+    - beanstalkd
+  become: yes
+
+- name: edit /etc/default/beanstalkd DAEMON_OPTS, set listener info and persistent storage options
+  lineinfile:
+    dest: /etc/default/beanstalkd
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+  with_items:
+    - { regexp: "^#?DAEMON_OPTS", line: "#DAEMON_OPTS - not supported as a direct override by /etc/init.d/beanstalkd" }
+    - { regexp: "^#?BEANSTALKD_LISTEN_ADDR", line: "BEANSTALKD_LISTEN_ADDR='{{ beanstalkdListenAddress }}'" }
+    - { regexp: "^#?BEANSTALKD_LISTEN_PORT", line: "BEANSTALKD_LISTEN_PORT='{{ beanstalkdListenPort }}'" }
+    - { regexp: "^#?BEANSTALKD_EXTRA", line: "BEANSTALKD_EXTRA='-b {{ beanstalkdPersistentStorageLocation }}'" }
+  notify: restart beanstalkd
+  become: yes
+
+- name: edit /etc/default/beanstalkd BEANSTALKD_LISTEN_ADDR set listener address
+  lineinfile: >
+    dest=/etc/default/beanstalkd
+    regexp='^#?BEANSTALKD_LISTEN_ADDR'
+    line='BEANSTALKD_LISTEN_ADDR={{ beanstalkdListenAddress }}'
+  notify: restart beanstalkd
+  become: yes
+
+- name: edit /etc/default/beanstalkd BEANSTALKD_LISTEN_PORT, set listener port
+  lineinfile: >
+    dest=/etc/default/beanstalkd
+    regexp='^#?BEANSTALKD_LISTEN_PORT'
+    line='BEANSTALKD_LISTEN_PORT={{ beanstalkdListenPort }}'
+  notify: restart beanstalkd
+  become: yes
+
+- name: edit /etc/default/beanstalkd START, enable startup
+  lineinfile: dest=/etc/default/beanstalkd regexp='^#?START' line='START=yes'
+  notify: restart beanstalkd
+  become: yes

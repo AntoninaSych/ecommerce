@@ -1,0 +1,11 @@
+[iSeries Access ODBC Driver]
+Description     = iSeries Access for Linux ODBC Driver
+Driver          = /opt/ibm/iSeriesAccess/lib/libcwbodbc.so
+Setup           = /opt/ibm/iSeriesAccess/lib/libcwbodbcs.so
+NOTE1           = If using unixODBC 2.2.11 or later and you want the 32 and 64-bit ODBC drivers to share DSN's,
+NOTE2           = the following Driver64/Setup64 keywords will provide that support.
+Driver64        = /opt/ibm/iSeriesAccess/lib64/libcwbodbc.so
+Setup64         = /opt/ibm/iSeriesAccess/lib64/libcwbodbcs.so
+Threading       = 2
+DontDLClose     = 1
+UsageCount      = 1

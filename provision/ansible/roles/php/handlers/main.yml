@@ -1,0 +1,11 @@
+---
+
+- name: Start PHP
+  service:
+    name: php{{ php_ver }}-fpm
+    state: started
+
+- name: Restart PHP
+  service:
+    name: php{{ php_ver }}-fpm
+    state: restarted

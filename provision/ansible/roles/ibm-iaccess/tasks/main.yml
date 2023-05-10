@@ -1,0 +1,46 @@
+---
+
+- name: Install prerequisite dependencies for IBM iAccess (unixodbc)
+  apt:
+    name: unixodbc
+    state: present
+
+# TODO: Place odbc.ini template
+
+- name: Download the IBM iAccess 64-bit deb package
+  get_url:
+    url: https://s3.amazonaws.com/geiger-public-hosted-files-prod/ibm-iaccess-linux/ibm-iaccess-1.1.0.1-1.0.amd64.deb
+    dest: ~/ibm-iaccess-1.1.0.1-1.0.amd64.deb
+    mode: 0777
+
+#- name: Download the IBM iAccess 64-bit deb package
+#  shell: wget -O ~/ibm-iaccess-1.1.0.1-1.0.amd64.deb https://s3.amazonaws.com/geiger-public-hosted-files-prod/ibm-iaccess-linux/ibm-iaccess-1.1.0.1-1.0.amd64.deb
+#  args:
+#    creates: ~/ibm-iaccess-1.1.0.1-1.0.amd64.deb
+
+- name: Install the IBM iAccess 64-bit deb package
+  shell: dpkg -i ~/ibm-iaccess-1.1.0.1-1.0.amd64.deb
+  args:
+    creates: /opt/ibm/iSeriesAccess/lib64/libcwbodbc.so
+  become: yes
+  become_user: root
+
+# - name: Install the IBM iAccess 64-bit deb package
+#   apt:
+#     deb: ~/ibm-iaccess-1.1.0.1-1.0.amd64.deb
+
+- name: Configure IBM iAccess (odbc.ini)
+  template:
+    src: odbc.ini.j2
+    dest: /etc/odbc.ini
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Configure IBM iAccess (odbcinst.ini)
+  template:
+    src: odbcinst.ini.j2
+    dest: /etc/odbcinst.ini
+    owner: root
+    group: root
+    mode: 0644

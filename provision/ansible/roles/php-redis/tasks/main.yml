@@ -1,0 +1,7 @@
+- name: Install php-redis extension
+  apt:
+    name: php{{ php_ver }}-redis
+    state: present
+  notify:
+    - Restart Nginx
+    - Restart PHP

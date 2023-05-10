@@ -1,0 +1,21 @@
+---
+
+- name: "Provision web server for local development"
+  hosts: all
+  become: yes
+  become_user: root
+  vars_files:
+    - group_vars/local/vars.yml
+  roles:
+    - { role: ubuntu-common }
+    - { role: unattended-upgrades }
+    - { role: swapfile }
+    - { role: npm }
+    - { role: nginx }
+    - { role: php }
+    - { role: mysql }
+    - { role: composer }
+    - { role: redis }
+    - { role: php-redis }
+    # - { role: ibm-iaccess, tags: ['network'] }
+    - { role: app-myproject }
