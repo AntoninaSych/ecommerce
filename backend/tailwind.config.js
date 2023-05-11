@@ -7,7 +7,9 @@ export default {
   theme: {
     extend: {},
   },
-  plugins: [],
+  plugins: [
+    require('@tailwindcss/forms'),
+  ],
 }
 
 //https://www.youtube.com/watch?v=jffKw_NMfnw&t=2020s 47 минута
