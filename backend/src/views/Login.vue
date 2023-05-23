@@ -108,18 +108,18 @@ const user = {
   password: '',
   remember: false
 }
-//
-// function login() {
-//     loading.value = true;
-//     store.dispatch('login', user)
-//         .then(() => {
-//             loading.value = false;
-//             router.push({name: 'app.dashboard'})
-//         })
-//         .catch(({response}) => {
-//             loading.value = false;
-//             errorMsg.value = response.data.message;
-//         })
-// }
+
+function login() {
+  loading.value = true;
+  store.dispatch('login', user)
+      .then(() => {
+        loading.value = false;
+        router.push({name: 'app.dashboard'})
+      })
+      .catch(({response}) => {
+        loading.value = false;
+        errorMsg.value = response.data.message;
+      })
+}
 
 </script>

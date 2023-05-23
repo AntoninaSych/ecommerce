@@ -23,7 +23,6 @@ class DatabaseSeeder extends Seeder
         // Do not allow seeders ('test data') to run in a production environment
         if (app()->environment() !== 'production') {
             Schema::disableForeignKeyConstraints();
-
             Schema::enableForeignKeyConstraints();
         }
     }
