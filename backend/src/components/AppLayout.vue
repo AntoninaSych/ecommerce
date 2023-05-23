@@ -1,14 +1,19 @@
 <template>
-  <header class="bg-white shadow">
-    <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-      <h1 class="text-3xl font-bold tracking-tight text-gray-900">Welcome to Dashboard!</h1>
+  <div class="min-h-full bg-gray-200 flex">
+
+    <!--    Sidebar-->
+    <Sidebar :class="{'-ml-[200px]': !sidebarOpened}"/>
+    <!--/    Sidebar-->
+
+    <div class="flex-1">
+      <Navbar @toggle-sidebar="toggleSidebar"></Navbar>
+      <!--      Content-->
+      <main class="p-6">
+        <router-view></router-view>
+      </main>
+      <!--      Content-->
     </div>
-  </header>
-  <main>
-    <div class="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8"> Al content wil be here
-      <slot></slot>
-    </div>
-  </main>
+  </div>
 
 </template>
 
@@ -29,19 +34,19 @@ function toggleSidebar() {
   sidebarOpened.value = !sidebarOpened.value
 }
 
-function updateSidebarState() {
-  sidebarOpened.value = window.outerWidth > 768;
-}
-
-onMounted(() => {
-
-  updateSidebarState();
-  window.addEventListener('resize', updateSidebarState)
-})
-
-onUnmounted(() => {
-  window.removeEventListener('resize', updateSidebarState)
-})
+// function updateSidebarState() {
+//   sidebarOpened.value = window.outerWidth > 768;
+// }
+//
+// onMounted(() => {
+//
+//   updateSidebarState();
+//   window.addEventListener('resize', updateSidebarState)
+// })
+//
+// onUnmounted(() => {
+//   window.removeEventListener('resize', updateSidebarState)
+// })
 
 </script>
 
