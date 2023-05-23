@@ -7,5 +7,4 @@ export default defineConfig({
     host: '192.168.56.10'
   },
   plugins: [vue()]
-
 })
