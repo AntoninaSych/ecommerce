@@ -9,11 +9,11 @@ export function getCurrentUser({commit}, data) {
 }
 
 export function login({commit}, data) {
-  return axiosClient.post('/login', data)
+  return axiosClient.post('login', data)
       .then(({data}) => {
-        commit('setUser', data.user);
-        commit('setToken', data.token)
-        return data;
+          commit('setUser', data.user);
+          commit('setToken', data.token)
+          return data;
       })
 }
 

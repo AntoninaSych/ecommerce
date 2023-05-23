@@ -19,7 +19,7 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => env('APP_HOSTS') ? array_filter(explode(' ', env('APP_HOSTS')), function($value) { return $value !== 'localhost'; }) : ['*'],
+    'allowed_origins' => ['*'],
 
     'allowed_origins_patterns' => [],
 
@@ -30,5 +30,6 @@ return [
     'max_age' => 0,
 
     'supports_credentials' => false,
+
 
 ];
