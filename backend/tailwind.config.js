@@ -29,4 +29,3 @@ module.exports = {
 }
 
 
-//https://www.youtube.com/watch?v=jffKw_NMfnw&t=2020s 47 минута

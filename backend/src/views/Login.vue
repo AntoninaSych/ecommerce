@@ -48,7 +48,7 @@
         </div>
 
         <div class="text-sm">
-          <router-link :to="{name: 'resetPassword'}" class="font-medium text-indigo-600 hover:text-indigo-500"> Forgot
+          <router-link :to="{name: 'requestPassword'}" class="font-medium text-indigo-600 hover:text-indigo-500"> Forgot
             your password?
           </router-link>
         </div>

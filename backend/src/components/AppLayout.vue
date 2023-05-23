@@ -1,22 +1,15 @@
 <template>
-  <div v-if="currentUser.id" class="min-h-full bg-gray-200 flex">
-    <!--    Sidebar-->
-    <Sidebar :class="{'-ml-[200px]': !sidebarOpened}"/>
-    <!--/    Sidebar-->
-
-    <div class="flex-1">
-      <Navbar @toggle-sidebar="toggleSidebar"></Navbar>
-      <!--      Content-->
-      <main class="p-6">
-        <router-view></router-view>
-      </main>
-      <!--      Content-->
+  <header class="bg-white shadow">
+    <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+      <h1 class="text-3xl font-bold tracking-tight text-gray-900">Welcome to Dashboard!</h1>
     </div>
-  </div>
-  <div v-else class="min-h-full bg-gray-200 flex items-center justify-center">
-    <Spinner/>
-  </div>
-  <Toast/>
+  </header>
+  <main>
+    <div class="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8"> Al content wil be here
+      <slot></slot>
+    </div>
+  </main>
+
 </template>
 
 <script setup>
@@ -24,8 +17,7 @@ import {ref, computed, onMounted, onUnmounted} from 'vue'
 import Sidebar from "./Sidebar.vue";
 import Navbar from "./Navbar.vue";
 import store from "../store";
-import Spinner from "./core/Spinner.vue";
-import Toast from "./core/Toast.vue";
+
 
 const {title} = defineProps({
   title: String
@@ -42,8 +34,7 @@ function updateSidebarState() {
 }
 
 onMounted(() => {
-  store.dispatch('getCurrentUser')
-  store.dispatch('getCountries')
+
   updateSidebarState();
   window.addEventListener('resize', updateSidebarState)
 })

@@ -8,3 +8,5 @@ check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html
 - [VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (
   and disable
   Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+
+https://youtu.be/jffKw_NMfnw?t=4012
