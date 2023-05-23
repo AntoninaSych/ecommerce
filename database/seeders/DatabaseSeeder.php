@@ -15,13 +15,15 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
+        $this->call([
+            AdminUserSeeder::class,
+            CountrySeeder::class
+        ]);
+
         // Do not allow seeders ('test data') to run in a production environment
         if (app()->environment() !== 'production') {
             Schema::disableForeignKeyConstraints();
-            // \App\Models\User::factory(10)->create();
-            // $this->call([
-            //     UserSeeder::class,
-            // ]);
+
             Schema::enableForeignKeyConstraints();
         }
     }
