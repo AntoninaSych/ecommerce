@@ -34,19 +34,19 @@ function toggleSidebar() {
   sidebarOpened.value = !sidebarOpened.value
 }
 
-// function updateSidebarState() {
-//   sidebarOpened.value = window.outerWidth > 768;
-// }
-//
-// onMounted(() => {
-//
-//   updateSidebarState();
-//   window.addEventListener('resize', updateSidebarState)
-// })
-//
-// onUnmounted(() => {
-//   window.removeEventListener('resize', updateSidebarState)
-// })
+function updateSidebarState() {
+  sidebarOpened.value = window.outerWidth > 768;
+}
+
+onMounted(() => {
+  store.dispatch('getCurrentUser')
+  updateSidebarState();
+  window.addEventListener('resize', updateSidebarState)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('resize', updateSidebarState)
+})
 
 </script>
 

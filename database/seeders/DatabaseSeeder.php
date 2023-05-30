@@ -15,9 +15,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
+
         $this->call([
             AdminUserSeeder::class,
-            CountrySeeder::class
+//            CountrySeeder::class,
+            ProductSeeder::class
         ]);
 
         // Do not allow seeders ('test data') to run in a production environment

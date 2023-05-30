@@ -4,13 +4,13 @@ import Dashboard from "../views/Dashboard.vue";
 import store from "../store/index.js";
 import ResetPassword from "../views/ResetPassword.vue";
 import AppLayout from "../components/AppLayout.vue";
-import Products from "../views/Products.vue";
+import Products from "../views/Products/Products.vue";
 import NotFound from "../views/NotFound.vue";
 import RequestPassword from "../views/RequestPassword.vue";
 
 const routes = [
     {
-        path: '/app',
+        path: '/',
         name: 'app',
         component: AppLayout,
         meta: {
