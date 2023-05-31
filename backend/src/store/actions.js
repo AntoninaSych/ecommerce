@@ -1,5 +1,6 @@
 import axiosClient from "../axios";
 import {setProducts} from "./mutations.js";
+import {PRODUCTS_PER_PAGE} from "../constants.js";
 
 export function getCurrentUser({commit}, data) {
     return axiosClient.get('/user', data)
@@ -28,9 +29,18 @@ export function logout({commit}) {
         })
 }
 
-export function getProducts({commit}) {
+export function getProducts({commit}, {
+    url = null,
+    search = '',
+    per_page = PRODUCTS_PER_PAGE,
+    sort_field,
+    sort_direction
+}) {
     commit('setProducts', [true])
-    return axiosClient.get('products')
+    url = url || 'products';
+    return axiosClient.get(url, {
+        params: {search, per_page, sort_field, sort_direction}
+    })
         .then(res => {
             commit('setProducts', [false, res.data])
         })
@@ -55,8 +65,7 @@ export function getOrders({commit, state}, {url = null, search = '', per_page, s
     }
     return axiosClient.get(url, {
         params: {
-            ...params,
-            search, per_page, sort_field, sort_direction
+            ...params, search, per_page, sort_field, sort_direction
         }
     })
         .then((response) => {
@@ -122,8 +131,7 @@ export function getUsers({commit, state}, {url = null, search = '', per_page, so
     }
     return axiosClient.get(url, {
         params: {
-            ...params,
-            search, per_page, sort_field, sort_direction
+            ...params, search, per_page, sort_field, sort_direction
         }
     })
         .then((response) => {
@@ -150,8 +158,7 @@ export function getCustomers({commit, state}, {url = null, search = '', per_page
     }
     return axiosClient.get(url, {
         params: {
-            ...params,
-            search, per_page, sort_field, sort_direction
+            ...params, search, per_page, sort_field, sort_direction
         }
     })
         .then((response) => {

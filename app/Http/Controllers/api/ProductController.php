@@ -23,15 +23,18 @@ class ProductController extends Controller
     {
         $perPage = request('per_page', 10);
         $search = request('search', '');
-        $sortField = request('sort_field', 'created_at');
+        $sortField = request('sort_field', 'updated_at');
         $sortDirection = request('sort_direction', 'desc');
+        $query = Product::query();
+        if ($search) {
+            $query = $query->where('title', 'like', "%{$search}%")
+                ->orWhere('description', 'like', "%{$search}%");
+        }
 
-        $query = Product::query()
-            ->where('title', 'like', "%{$search}%")
-            ->orderBy($sortField, $sortDirection)
+        $data = $query->orderBy($sortField, $sortDirection)
             ->paginate($perPage);
 
-        return ProductListResource::collection($query);
+        return ProductListResource::collection($data);
     }
 
     /**
