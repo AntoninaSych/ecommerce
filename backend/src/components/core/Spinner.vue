@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col items-center" :class="class">
+  <div class="flex flex-col items-center" :class="className">
     <svg
         class="animate-spin -ml-1 h-8 w-8 text-gray-700"
         xmlns="http://www.w3.org/2000/svg"
@@ -31,7 +31,7 @@ const {text} = defineProps({
     type: String,
     default: 'Please Wait...'
   },
-  class: {
+  className: {
     type: String,
     default: 'py-8'
   }

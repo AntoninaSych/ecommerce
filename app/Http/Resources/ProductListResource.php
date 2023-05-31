@@ -1,10 +1,8 @@
 <?php
 
-namespace App\Resources;
+namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\URL;
 
 class ProductListResource extends JsonResource
 {

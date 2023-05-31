@@ -3,7 +3,7 @@
         'name' => 'geiger-it/myproject',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => 'a17f663e11a0267fb17a6f44abf8292830cfa276',
+        'reference' => 'aa174f1045af92e82ee27d49dfe064d80d2be99c',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -187,7 +187,7 @@
         'geiger-it/myproject' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => 'a17f663e11a0267fb17a6f44abf8292830cfa276',
+            'reference' => 'aa174f1045af92e82ee27d49dfe064d80d2be99c',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -802,8 +802,8 @@
         'psr/http-client-implementation' => array(
             'dev_requirement' => false,
             'provided' => array(
-                0 => '*',
-                1 => '1.0',
+                0 => '1.0',
+                1 => '*',
             ),
         ),
         'psr/http-factory' => array(
@@ -1092,20 +1092,11 @@
             'dev_requirement' => true,
         ),
         'spatie/laravel-sluggable' => array(
-            'pretty_version' => '3.4.2',
-            'version' => '3.4.2.0',
-            'reference' => 'e62c6b5de2d41d900749a1b6d339d05c5f4974fa',
+            'pretty_version' => '3.5.0',
+            'version' => '3.5.0.0',
+            'reference' => '041af2533fe2206715e9a4a9cad2cab6cb796655',
             'type' => 'library',
             'install_path' => __DIR__ . '/../spatie/laravel-sluggable',
-            'aliases' => array(),
-            'dev_requirement' => false,
-        ),
-        'stripe/stripe-php' => array(
-            'pretty_version' => 'v9.9.0',
-            'version' => '9.9.0.0',
-            'reference' => '479b5c2136fde0debb93d290ceaf20dd161c358f',
-            'type' => 'library',
-            'install_path' => __DIR__ . '/../stripe/stripe-php',
             'aliases' => array(),
             'dev_requirement' => false,
         ),

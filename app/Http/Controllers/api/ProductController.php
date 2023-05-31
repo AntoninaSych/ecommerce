@@ -4,10 +4,9 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProductRequest;
-
+use App\Http\Resources\ProductListResource;
+use App\Http\Resources\ProductResource;
 use App\Models\Api\Product;
-use App\Resources\ProductListResource;
-use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
@@ -59,7 +58,7 @@ class ProductController extends Controller
 
         $product = Product::create($data);
 
-        return new ProductListResource($product);
+        return new ProductResource($product);
     }
 
     /**

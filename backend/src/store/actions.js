@@ -1,4 +1,5 @@
 import axiosClient from "../axios";
+import {setProducts} from "./mutations.js";
 
 export function getCurrentUser({commit}, data) {
     return axiosClient.get('/user', data)
@@ -17,6 +18,7 @@ export function login({commit}, data) {
         })
 }
 
+
 export function logout({commit}) {
     return axiosClient.post('/logout')
         .then((response) => {
@@ -25,6 +27,18 @@ export function logout({commit}) {
             return response;
         })
 }
+
+export function getProducts({commit}) {
+    commit('setProducts', [true])
+    return axiosClient.get('products')
+        .then(res => {
+            commit('setProducts', [false, res.data])
+        })
+        .catch(() => {
+            commit('setProducts', [false])
+        })
+}
+
 
 export function getCountries({commit}) {
     return axiosClient.get('countries')
@@ -57,25 +71,27 @@ export function getOrder({commit}, id) {
     return axiosClient.get(`/orders/${id}`)
 }
 
-export function getProducts({commit, state}, {url = null, search = '', per_page, sort_field, sort_direction} = {}) {
-    commit('setProducts', [true])
-    url = url || '/products'
-    const params = {
-        per_page: state.products.limit,
-    }
-    return axiosClient.get(url, {
-        params: {
-            ...params,
-            search, per_page, sort_field, sort_direction
-        }
-    })
-        .then((response) => {
-            commit('setProducts', [false, response.data])
-        })
-        .catch(() => {
-            commit('setProducts', [false])
-        })
-}
+//
+// export function getProducts({commit, state}, {url = null, search = '', per_page, sort_field, sort_direction} = {}) {
+//     commit('setProducts', [true])
+//     url = url || '/products'
+//     const params = {
+//         per_page: state.products.limit,
+//     }
+//     return axiosClient.get(url, {
+//         params: {
+//             ...params,
+//             search, per_page, sort_field, sort_direction
+//         }
+//     })
+//         .then((response) => {
+//             debugger
+//             commit('setProducts', [false, response.data])
+//         })
+//         .catch(() => {
+//             commit('setProducts', [false])
+//         })
+// }
 
 export function getProduct({commit}, id) {
     return axiosClient.get(`/products/${id}`)
