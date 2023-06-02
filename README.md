@@ -9,7 +9,7 @@ Add Vagrantfile and place everything from (Vagrantfile.example)
 
 #### In vagrant box:
 
-```cd backoffice```
+```cd backend```
 ```npm run dev```
 
 ### You can see application :
