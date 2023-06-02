@@ -168,6 +168,7 @@ import {DotsVerticalIcon, PencilIcon, TrashIcon} from '@heroicons/vue/outline'
 import ProductModal from "./ProductModal.vue";
 
 
+const emit = defineEmits(['clickEdit'])
 const perPage = ref(PRODUCTS_PER_PAGE)
 const search = ref('')
 const products = computed(() => store.state.products)
@@ -176,7 +177,7 @@ const sortDirection = ref('desc')
 
 
 onMounted(() => {
-    getProducts(null);
+  getProducts(null);
 })
 
 function getProducts(url = null) {
@@ -221,6 +222,10 @@ function deleteProduct(product) {
       .then(res => {
         store.dispatch('getProducts')
       })
+}
+
+function editProduct(product) {
+  emit('clickEdit', product)
 }
 
 </script>

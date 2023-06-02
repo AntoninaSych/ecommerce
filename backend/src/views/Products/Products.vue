@@ -7,13 +7,15 @@
         </button>
     </div>
     <ProductModal v-model="showModal" :product="productModal"></ProductModal>
-    <ProductsTable></ProductsTable>
+    <ProductsTable @clickEdit="editProduct"></ProductsTable>
 </template>
 
 <script setup>
 import ProductsTable from "./ProductsTable.vue";
 import ProductModal from "./ProductModal.vue";
 import {ref} from "vue";
+import store from "../../store/index.js";
+import {data} from "autoprefixer";
 
 const showModal = ref(false);
 const productModal = ref({
@@ -24,9 +26,19 @@ const productModal = ref({
   price: ''
 
 })
+
 function showProductModal() {
-    showModal.value = true;
+  showModal.value = true;
 }
+
+function editProduct(product) {
+  store.dispatch('getProduct', product.id)
+      .then(({data}) => {
+        productModal.value = data
+        showProductModal()
+      })
+}
+
 </script>
 
 <style scoped>

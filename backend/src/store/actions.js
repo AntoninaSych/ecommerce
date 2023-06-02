@@ -49,6 +49,9 @@ export function getProducts({commit}, {
         })
 }
 
+export function getProduct({commit}, id) {
+    return axiosClient.get(`/products/${id}`)
+}
 
 export function createProduct({commit}, product) {
     if (product.image instanceof File) {
