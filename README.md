@@ -1,4 +1,4 @@
-###  
+###   
 
 Add Vagrantfile and place everything from (Vagrantfile.example)
 
@@ -6,6 +6,9 @@ Add Vagrantfile and place everything from (Vagrantfile.example)
 
 ```vagrant up --provision```
 ```vagrant ssh```
+
+//TODO after testing remove
+```sudo ln -s /vagrant/storage/app/public ./public/storage```
 
 #### In vagrant box:
 

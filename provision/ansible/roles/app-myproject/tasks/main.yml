@@ -279,3 +279,7 @@
 # - name: Restart queue (so long-lived workers don't execute on old code)
 - name: Restart Queue
   shell: php {{ app_root_dir }}/artisan queue:restart
+
+#  need to be tested
+# - name: Restart Queue
+#   shell: sudo ln -s /vagrant/storage/app/public ./public/storage

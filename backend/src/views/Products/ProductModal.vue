@@ -11,7 +11,7 @@
                 leave-from="opacity-100"
                 leave-to="opacity-0"
             >
-              <div class="fixed inset-0 bg-black bg-opacity-25"/>
+              <div class="fixed inset-0 bg-black bg-opacity-75"/>
             </TransitionChild>
 
             <div class="fixed inset-0 overflow-y-auto">
@@ -28,7 +28,7 @@
                       leave-to="opacity-0 scale-95"
                   >
                     <DialogPanel
-                        class="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all"
+                        class="w-full max-w-md transform overflow-hidden rounded-2xl bg-white  text-left align-middle shadow-xl transition-all"
                     >
                       <Spinner v-if="loading"
                                class="absolute left-0 top-0 bg-white right-0 bottom-0 flex items-center justify-center"/>
