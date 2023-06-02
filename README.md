@@ -1,3 +1,7 @@
+###  
+
+Add Vagrantfile and place everything from (Vagrantfile.example)
+
 #### Run
 
 ```vagrant up --provision```
@@ -15,5 +19,5 @@ port: '5175'
 
 #### Login:
 
-'email': admin@example.com
-'password' : admin123
+email: ```admin@example.com```
+password : ```admin123```
