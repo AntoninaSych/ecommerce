@@ -6,7 +6,7 @@
                 @click="showProductModal">Add New Product
         </button>
     </div>
-    <ProductModal v-model="showModal" :product="productModal"></ProductModal>
+    <ProductModal v-model="showModal" :product="productModal" @close="onModalClose"></ProductModal>
     <ProductsTable @clickEdit="editProduct"></ProductsTable>
 </template>
 
@@ -17,15 +17,16 @@ import {ref} from "vue";
 import store from "../../store/index.js";
 import {data} from "autoprefixer";
 
-const showModal = ref(false);
-const productModal = ref({
+const INITIAL_OBJECT = {
   id: '',
   title: '',
   image: '',
   description: '',
   price: ''
 
-})
+}
+const showModal = ref(false);
+const productModal = ref({...INITIAL_OBJECT})
 
 function showProductModal() {
   showModal.value = true;
@@ -37,6 +38,10 @@ function editProduct(product) {
         productModal.value = data
         showProductModal()
       })
+}
+
+function onModalClose() {
+  productModal.value = {...INITIAL_OBJECT}
 }
 
 </script>

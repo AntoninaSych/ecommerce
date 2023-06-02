@@ -37,8 +37,8 @@
                         <DialogTitle as="h3" class="text-lg leading-6 font-medium text-gray-900">
                           {{ product.id ? `Update product: "${props.product.title}"` : 'Create new Product' }}
                         </DialogTitle>
-                        <button
-                            class="w-8 h-8 flex items-center justify-center rounded-full transition-colors cursor-pointer hover:bg-[rgba(0,0,0,0.2)]">
+                        <button @click="closeModal"
+                                class="w-8 h-8 flex items-center justify-center rounded-full transition-colors cursor-pointer hover:bg-[rgba(0,0,0,0.2)]">
 
                           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                                stroke="currentColor" class="w-6 h-6">
