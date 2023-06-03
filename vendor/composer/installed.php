@@ -3,7 +3,7 @@
         'name' => 'geiger-it/myproject',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => 'aa174f1045af92e82ee27d49dfe064d80d2be99c',
+        'reference' => 'da95fb6a30e163979212b60b499e11c72d41ce04',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -187,7 +187,7 @@
         'geiger-it/myproject' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => 'aa174f1045af92e82ee27d49dfe064d80d2be99c',
+            'reference' => 'da95fb6a30e163979212b60b499e11c72d41ce04',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -444,6 +444,15 @@
             'replaced' => array(
                 0 => '*',
             ),
+        ),
+        'laravel/breeze' => array(
+            'pretty_version' => 'v1.19.2',
+            'version' => '1.19.2.0',
+            'reference' => '725e0c4fb1f630afdd90b5fba2a7f6d8d547ac29',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../laravel/breeze',
+            'aliases' => array(),
+            'dev_requirement' => true,
         ),
         'laravel/framework' => array(
             'pretty_version' => 'v9.52.7',
