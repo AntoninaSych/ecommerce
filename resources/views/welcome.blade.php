@@ -1,3 +1,3 @@
-<app-layout>
+<x-app-layout>
     Wellcome
-</app-layout>
+</x-app-layout>
