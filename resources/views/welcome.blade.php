@@ -1,3 +1,3 @@
 <x-app-layout>
-    Wellcome
+    Wellcome1
 </x-app-layout>

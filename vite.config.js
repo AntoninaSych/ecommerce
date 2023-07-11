@@ -5,9 +5,9 @@ export default defineConfig({
     server: {
         host: '192.168.56.10',
         port: '5176',
-        watch: {
-            usePolling: true,
-        },
+        // watch: {
+        //     usePolling: true,
+        // },
     },
     plugins: [
         laravel({
