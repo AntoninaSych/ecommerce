@@ -42,7 +42,7 @@
 
                 <input id="password_confirmation" placeholder="Repeat password"
                        class="border-gray-300 focus:border-purple-500 focus:outline-none focus:ring-purple-500 rounded-md w-full"
-                       class="block mt-1 w-full"
+
                        type="password"
                        name="password_confirmation" required autocomplete="new-password"/>
 
