@@ -214,6 +214,39 @@ class Watcher extends AbstractEndpoint
 
 
 	/**
+	 * Retrieve settings for the watcher system index
+	 *
+	 * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/watcher-api-get-settings.html
+	 *
+	 * @param array{
+	 *     pretty: boolean, // Pretty format the returned JSON response. (DEFAULT: false)
+	 *     human: boolean, // Return human readable values for statistics. (DEFAULT: true)
+	 *     error_trace: boolean, // Include the stack trace of returned errors. (DEFAULT: false)
+	 *     source: string, // The URL-encoded request definition. Useful for libraries that do not accept a request body for non-POST requests.
+	 *     filter_path: list, // A comma-separated list of filters used to reduce the response.
+	 * } $params
+	 *
+	 * @throws NoNodeAvailableException if all the hosts are offline
+	 * @throws ClientResponseException if the status code of response is 4xx
+	 * @throws ServerResponseException if the status code of response is 5xx
+	 *
+	 * @return Elasticsearch|Promise
+	 */
+	public function getSettings(array $params = [])
+	{
+		$url = '/_watcher/settings';
+		$method = 'GET';
+
+		$url = $this->addQueryString($url, $params, ['pretty','human','error_trace','source','filter_path']);
+		$headers = [
+			'Accept' => 'application/json',
+			'Content-Type' => 'application/json',
+		];
+		return $this->client->sendRequest($this->createRequest($method, $url, $headers, $params['body'] ?? null));
+	}
+
+
+	/**
 	 * Retrieves a watch by its ID.
 	 *
 	 * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/watcher-api-get-watch.html
@@ -420,6 +453,41 @@ class Watcher extends AbstractEndpoint
 		$url = $this->addQueryString($url, $params, ['pretty','human','error_trace','source','filter_path']);
 		$headers = [
 			'Accept' => 'application/json',
+		];
+		return $this->client->sendRequest($this->createRequest($method, $url, $headers, $params['body'] ?? null));
+	}
+
+
+	/**
+	 * Update settings for the watcher system index
+	 *
+	 * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/watcher-api-update-settings.html
+	 *
+	 * @param array{
+	 *     pretty: boolean, // Pretty format the returned JSON response. (DEFAULT: false)
+	 *     human: boolean, // Return human readable values for statistics. (DEFAULT: true)
+	 *     error_trace: boolean, // Include the stack trace of returned errors. (DEFAULT: false)
+	 *     source: string, // The URL-encoded request definition. Useful for libraries that do not accept a request body for non-POST requests.
+	 *     filter_path: list, // A comma-separated list of filters used to reduce the response.
+	 *     body: array, // (REQUIRED) An object with the new index settings
+	 * } $params
+	 *
+	 * @throws NoNodeAvailableException if all the hosts are offline
+	 * @throws ClientResponseException if the status code of response is 4xx
+	 * @throws ServerResponseException if the status code of response is 5xx
+	 *
+	 * @return Elasticsearch|Promise
+	 */
+	public function updateSettings(array $params = [])
+	{
+		$this->checkRequiredParameters(['body'], $params);
+		$url = '/_watcher/settings';
+		$method = 'PUT';
+
+		$url = $this->addQueryString($url, $params, ['pretty','human','error_trace','source','filter_path']);
+		$headers = [
+			'Accept' => 'application/json',
+			'Content-Type' => 'application/json',
 		];
 		return $this->client->sendRequest($this->createRequest($method, $url, $headers, $params['body'] ?? null));
 	}

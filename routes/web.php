@@ -14,9 +14,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [\App\Http\Controllers\Frontend\ProductController::class, 'index'])->name('product.index');
+Route::get('/product/{product}', [\App\Http\Controllers\Frontend\ProductController::class, 'show'])->name('product.show');
+Route::get('/cart', [\App\Http\Controllers\Frontend\CartController::class, 'index'])->name('cart.index');
+
 
 Route::get('/dashboard', function () {
     return view('dashboard');

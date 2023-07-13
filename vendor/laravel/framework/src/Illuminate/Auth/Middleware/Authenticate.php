@@ -23,7 +23,7 @@ class Authenticate implements AuthenticatesRequests
      * @return void
      */
     public function __construct(Auth $auth)
-    {
+    { 
         $this->auth = $auth;
     }
 

@@ -1,6 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Facade;
+if (env('APP_DEBUG') === true && env('APP_ENV') == 'local') {
+    $app_config['providers'][] = 'Barryvdh\Debugbar\ServiceProvider';
+    $app_config['aliases']['Debugbar'] = 'Barryvdh\Debugbar\Facade';
+}
 
 return [
 

@@ -3,7 +3,7 @@
         class="flex justify-between bg-slate-800 shadow-md text-white"
 >
     <div>
-        <a href="/src" class="block py-navbar-item pl-5"> Logo </a>
+        <a href="{{route('product.index')}}" class="block py-navbar-item pl-5"> Logo </a>
     </div>
     <!-- Responsive Menu -->
     <div
@@ -14,7 +14,7 @@
 
             <li>
                 <a
-                        href="/src/cart.html"
+                        href="{{route('cart.index')}}"
                         class="relative flex items-center justify-between py-2 px-3 transition-colors hover:bg-slate-800"
                 >
                     <div class="flex items-center">
@@ -223,7 +223,7 @@
         <ul class="grid grid-flow-col items-center">
             <li>
                 <a
-                        href="/src/cart.html"
+                        href="{{route('cart.index')}}"
                         class="relative inline-flex items-center py-navbar-item px-navbar-item hover:bg-slate-900"
                 >
                     <svg

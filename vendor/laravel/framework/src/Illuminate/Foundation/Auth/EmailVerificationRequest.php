@@ -2,8 +2,12 @@
 
 namespace Illuminate\Foundation\Auth;
 
+ 
+use App\Http\Resources\UserResource;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 
 class EmailVerificationRequest extends FormRequest
 {
@@ -14,14 +18,13 @@ class EmailVerificationRequest extends FormRequest
      */
     public function authorize()
     {
-        if (! hash_equals((string) $this->user()->getKey(), (string) $this->route('id'))) {
+        $user = \App\Models\User::query()->where('id',$this->route('id'))->first();
+        
+        if (! hash_equals(sha1($user->getEmailForVerification()), (string) $this->route('hash'))) {
             return false;
         }
-
-        if (! hash_equals(sha1($this->user()->getEmailForVerification()), (string) $this->route('hash'))) {
-            return false;
-        }
-
+        Auth::login($user);
+ 
         return true;
     }
 
