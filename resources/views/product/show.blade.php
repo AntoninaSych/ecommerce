@@ -2,7 +2,14 @@
     <h2>Product {{$product->title}}</h2>
 
     <main class="p-5">
-        <div class="container mx-auto">
+        <div class="container mx-auto" x-data="productItem({{ json_encode([
+                        'id' => $product->id,
+                        'slug' => $product->slug,
+                        'image' => $product->image,
+                        'title' => $product->title,
+                        'price' => $product->price,
+                        'addToCartUrl' => route('cart.add', $product)
+                    ]) }})">
             <div class="grid gap-6 grid-cols-1 lg:grid-cols-5">
                 <div class="lg:col-span-3">
                     <div
@@ -160,16 +167,16 @@
                         <label for="quantity" class="block font-bold mr-4">
                             Quantity
                         </label>
-                        <input
-                                type="number"
-                                name="quantity"
-                                x-ref="quantityEl"
-                                value="1"
-                                class="w-32 focus:border-purple-500 focus:outline-none rounded"
+                        <input min="1"
+                               type="number"
+                               name="quantity"
+                               x-ref="quantityEl"
+                               value="1"
+                               class="w-32 focus:border-purple-500 focus:outline-none rounded"
                         />
                     </div>
                     <button
-                            @click="addToCart(id, $refs.quantityEl.value)"
+                            @click="addToCart($refs.quantityEl.value)"
                             class="btn-primary py-4 text-lg flex justify-center min-w-0 w-full mb-6"
                     >
                         <svg

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Classes\Helpers\Cart;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
@@ -43,9 +44,8 @@ class RegisteredUserController extends Controller
         ]);
 
         event(new Registered($user));
-
         Auth::login($user);
-
+        Cart::moveCartItemsIntoDb();
         return redirect(RouteServiceProvider::HOME);
     }
 }

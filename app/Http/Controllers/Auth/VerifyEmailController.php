@@ -27,7 +27,7 @@ class VerifyEmailController extends Controller
 
         if ($request->user()->markEmailAsVerified()) {
             event(new Verified($request->user()));
-            $user = \App\Models\User::query()->where('id', $request->route('id'))->first();
+            $user = User::query()->where('id', $request->route('id'))->first();
             Auth::login($user);
         }
 
