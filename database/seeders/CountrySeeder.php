@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\Country;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -17,7 +16,7 @@ class CountrySeeder extends Seeder
      */
     public function run()
     {
-        DB::table('counties')->truncate();
+//        DB::table('countries')->truncate();
 
         $usaStates = [
             "AL" => 'Alabama',
@@ -26,8 +25,10 @@ class CountrySeeder extends Seeder
             "AR" => 'Arkansas',
             "CA" => 'California',
         ];
+        //created several countries  for test
         $countries = [
-            ['code' => 'geo', 'name' => 'Georgia', 'states' => null],
+            ['code' => 'ua', 'name' => 'Ukraine', 'states' => null],
+            ['code' => 'uk', 'name' => 'UK', 'states' => null],
             ['code' => 'ind', 'name' => 'India', 'states' => null],
             ['code' => 'usa', 'name' => 'United States of America', 'states' => json_encode($usaStates)],
             ['code' => 'ger', 'name' => 'Germany', 'states' => null],

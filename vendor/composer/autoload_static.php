@@ -637,6 +637,7 @@ class ComposerStaticInit15f07ce02e558cf13ab097674378da57
     );
 
     public static $classMap = array (
+        'App\\Classes\\Helpers\\Cart' => __DIR__ . '/../..' . '/app/Classes/Helpers/Cart.php',
         'App\\Console\\Commands\\IndexSampleData' => __DIR__ . '/../..' . '/app/Console/Commands/IndexSampleData.php',
         'App\\Console\\Kernel' => __DIR__ . '/../..' . '/app/Console/Kernel.php',
         'App\\Exceptions\\Handler' => __DIR__ . '/../..' . '/app/Exceptions/Handler.php',
@@ -662,7 +663,6 @@ class ComposerStaticInit15f07ce02e558cf13ab097674378da57
         'App\\Http\\Middleware\\Authenticate' => __DIR__ . '/../..' . '/app/Http/Middleware/Authenticate.php',
         'App\\Http\\Middleware\\Cors' => __DIR__ . '/../..' . '/app/Http/Middleware/Cors.php',
         'App\\Http\\Middleware\\EncryptCookies' => __DIR__ . '/../..' . '/app/Http/Middleware/EncryptCookies.php',
-        'App\\Http\\Middleware\\EnsureEmailIsVerified' => __DIR__ . '/../..' . '/app/Http/Middleware/EnsureEmailIsVerified.php',
         'App\\Http\\Middleware\\GuestOrVerified' => __DIR__ . '/../..' . '/app/Http/Middleware/GuestOrVerified.php',
         'App\\Http\\Middleware\\PreventRequestsDuringMaintenance' => __DIR__ . '/../..' . '/app/Http/Middleware/PreventRequestsDuringMaintenance.php',
         'App\\Http\\Middleware\\RedirectIfAuthenticated' => __DIR__ . '/../..' . '/app/Http/Middleware/RedirectIfAuthenticated.php',
@@ -683,6 +683,7 @@ class ComposerStaticInit15f07ce02e558cf13ab097674378da57
         'App\\Http\\Resources\\UserResource' => __DIR__ . '/../..' . '/app/Http/Resources/UserResource.php',
         'App\\Models\\Api\\Product' => __DIR__ . '/../..' . '/app/Models/Api/Product.php',
         'App\\Models\\Api\\User' => __DIR__ . '/../..' . '/app/Models/Api/User.php',
+        'App\\Models\\CartItem' => __DIR__ . '/../..' . '/app/Models/CartItem.php',
         'App\\Models\\Customer' => __DIR__ . '/../..' . '/app/Models/Customer.php',
         'App\\Models\\Product' => __DIR__ . '/../..' . '/app/Models/Product.php',
         'App\\Models\\User' => __DIR__ . '/../..' . '/app/Models/User.php',

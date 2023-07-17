@@ -1,15 +1,24 @@
 <?php return array(
     'root' => array(
-        'name' => 'geiger-it/myproject',
+        'name' => 'antoninasych/ecommerce',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '23dbd64b5b4d2eb825500e7ed94397cd12cbc213',
+        'reference' => '4fafbf304bc4b769af559827119a140dd87df79e',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
         'dev' => true,
     ),
     'versions' => array(
+        'antoninasych/ecommerce' => array(
+            'pretty_version' => 'dev-main',
+            'version' => 'dev-main',
+            'reference' => '4fafbf304bc4b769af559827119a140dd87df79e',
+            'type' => 'project',
+            'install_path' => __DIR__ . '/../../',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
         'asm89/stack-cors' => array(
             'pretty_version' => 'v2.1.1',
             'version' => '2.1.1.0',
@@ -226,15 +235,6 @@
             'reference' => '58571acbaa5f9f462c9c77e911700ac66f446d4e',
             'type' => 'library',
             'install_path' => __DIR__ . '/../fruitcake/php-cors',
-            'aliases' => array(),
-            'dev_requirement' => false,
-        ),
-        'geiger-it/myproject' => array(
-            'pretty_version' => 'dev-main',
-            'version' => 'dev-main',
-            'reference' => '23dbd64b5b4d2eb825500e7ed94397cd12cbc213',
-            'type' => 'project',
-            'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
             'dev_requirement' => false,
         ),

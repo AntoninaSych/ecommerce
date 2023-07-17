@@ -6,6 +6,7 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
+    'App\\Classes\\Helpers\\Cart' => $baseDir . '/app/Classes/Helpers/Cart.php',
     'App\\Console\\Commands\\IndexSampleData' => $baseDir . '/app/Console/Commands/IndexSampleData.php',
     'App\\Console\\Kernel' => $baseDir . '/app/Console/Kernel.php',
     'App\\Exceptions\\Handler' => $baseDir . '/app/Exceptions/Handler.php',
@@ -31,7 +32,6 @@ return array(
     'App\\Http\\Middleware\\Authenticate' => $baseDir . '/app/Http/Middleware/Authenticate.php',
     'App\\Http\\Middleware\\Cors' => $baseDir . '/app/Http/Middleware/Cors.php',
     'App\\Http\\Middleware\\EncryptCookies' => $baseDir . '/app/Http/Middleware/EncryptCookies.php',
-    'App\\Http\\Middleware\\EnsureEmailIsVerified' => $baseDir . '/app/Http/Middleware/EnsureEmailIsVerified.php',
     'App\\Http\\Middleware\\GuestOrVerified' => $baseDir . '/app/Http/Middleware/GuestOrVerified.php',
     'App\\Http\\Middleware\\PreventRequestsDuringMaintenance' => $baseDir . '/app/Http/Middleware/PreventRequestsDuringMaintenance.php',
     'App\\Http\\Middleware\\RedirectIfAuthenticated' => $baseDir . '/app/Http/Middleware/RedirectIfAuthenticated.php',
@@ -52,6 +52,7 @@ return array(
     'App\\Http\\Resources\\UserResource' => $baseDir . '/app/Http/Resources/UserResource.php',
     'App\\Models\\Api\\Product' => $baseDir . '/app/Models/Api/Product.php',
     'App\\Models\\Api\\User' => $baseDir . '/app/Models/Api/User.php',
+    'App\\Models\\CartItem' => $baseDir . '/app/Models/CartItem.php',
     'App\\Models\\Customer' => $baseDir . '/app/Models/Customer.php',
     'App\\Models\\Product' => $baseDir . '/app/Models/Product.php',
     'App\\Models\\User' => $baseDir . '/app/Models/User.php',

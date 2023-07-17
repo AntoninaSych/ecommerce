@@ -19,7 +19,7 @@ class EmailVerificationRequest extends FormRequest
     public function authorize()
     {
         $user = \App\Models\User::query()->where('id',$this->route('id'))->first();
-        
+
         if (! hash_equals(sha1($user->getEmailForVerification()), (string) $this->route('hash'))) {
             return false;
         }
