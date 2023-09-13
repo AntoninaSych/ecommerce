@@ -1,11 +1,10 @@
 <?php
 
+use App\Http\Controllers\Frontend\CartController;
+use App\Http\Controllers\Frontend\ProductController as FrontendProductController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
-use \App\Http\Controllers\Frontend\ProductController as FrontendProductController;
-use \App\Http\Controllers\ProductController as ProductController;
-use \App\Http\Controllers\Frontend\CartController;
-
+use \App\Http\Controllers\CheckoutController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -38,7 +37,12 @@ Route::middleware(['guestOrVerified'])->group(function () {
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
     Route::post('/profile', [ProfileController::class, 'store'])->name('profile.update');
+    Route::post('/cart/checkout', [CartController::class, 'checkout'])->name('cart.checkout');
     Route::post('/profile/password-update', [ProfileController::class, 'passwordUpdate'])->name('profile_password.update');
+
+    Route::post('/checkout', [CheckoutController::class, 'checkout'])->name('checkout.session');
+    Route::get('/checkout/success', [CheckoutController::class, 'success'])->name('checkout.success');
+    Route::get('/checkout/failure', [CheckoutController::class, 'failure'])->name('checkout.failure');
 });
 
 require __DIR__ . '/auth.php';

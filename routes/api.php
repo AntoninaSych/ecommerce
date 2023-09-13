@@ -1,11 +1,6 @@
 <?php
 
-use App\Http\Controllers\Api\CustomerController;
-use App\Http\Controllers\Api\DashboardController;
-use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\ProductController;
-use App\Http\Controllers\Api\UserController;
-use App\Http\Controllers\ReportController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -24,7 +19,6 @@ Route::middleware(['auth:sanctum', 'admin'])->group(function () {
     Route::post('/logout', [\App\Http\Controllers\Api\AuthController::class, 'logout']);
 
     Route::apiResource('products', ProductController::class);
-
 });
 
 Route::post('/login', [\App\Http\Controllers\Api\AuthController::class, 'login']);
