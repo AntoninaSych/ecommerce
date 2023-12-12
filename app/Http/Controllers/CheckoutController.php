@@ -74,6 +74,39 @@ class CheckoutController extends Controller
         return redirect($session->url);
     }
 
+    public function checkoutOrder(Order $order, Request $request)
+    {
+        \Stripe\Stripe::setApiKey(getenv('STRIPE_SECRET_KEY'));
+
+        $lineItems = [];
+        foreach ($order->items as $item) {
+            $lineItems[] = [
+                'price_data' => [
+                    'currency' => 'usd',
+                    'product_data' => [
+                        'name' => $item->product->title,
+//                        'images' => [$product->image]
+                    ],
+                    'unit_amount' => $item->unit_price * 100,
+                ],
+                'quantity' => $item->quantity,
+            ];
+        }
+
+        $session = \Stripe\Checkout\Session::create([
+            'line_items' => $lineItems,
+            'mode' => 'payment',
+            'success_url' => route('checkout.success', [], true) . '?session_id={CHECKOUT_SESSION_ID}',
+            'cancel_url' => route('checkout.failure', [], true),
+        ]);
+
+        $order->payment->session_id = $session->id;
+        $order->payment->save();
+
+
+        return redirect($session->url);
+    }
+
     public function success(Request $request)
     {
         $stripe = new \Stripe\StripeClient(getenv('STRIPE_SECRET_KEY'));
