@@ -47,6 +47,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/checkout/{order}', [CheckoutController::class, 'checkoutOrder'])->name('cart.checkout-order');
     Route::get('/order', [OrderController::class, 'index'])->name('order.index');
     Route::get('/order/:order', [OrderController::class, 'show'])->name('order.show');
+    Route::get('/order/{order}/view', [OrderController::class, 'view'])->name('order.view');
 
 
 });

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use Illuminate\Http\Request;
+use Illuminate\Validation\UnauthorizedException;
 
 class OrderController extends Controller
 {
@@ -29,6 +30,15 @@ class OrderController extends Controller
         }
 
 
+        return view('order.view')->with(['order' => $order]);
+    }
+
+    public function view(Request $request, Order $order)
+    {
+        $user = $request->user();
+        if ($order->created_by !== $user->id) {
+            return response("You don't have permission to view this order", 403);
+        }
         return view('order.view')->with(['order' => $order]);
     }
 
