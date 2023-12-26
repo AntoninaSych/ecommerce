@@ -28,6 +28,7 @@ class OrderController extends Controller
             return response("You don't have permission to view this order", 403);
         }
 
+
         return view('order.view')->with(['order' => $order]);
     }
 

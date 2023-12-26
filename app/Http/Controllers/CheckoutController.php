@@ -8,8 +8,10 @@ use App\Enums\OrderStatus;
 use App\Enums\PaymentStatus;
 use App\Models\CartItem;
 use App\Models\Order;
+use App\Models\OrderItem;
 use App\Models\Payment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Stripe\Checkout\Session;
 use Stripe\Customer;
@@ -26,6 +28,7 @@ class CheckoutController extends Controller
 
         $line_items = [];
         $totalPrice = 0;
+        $collectionItems = new Collection();
         foreach ($products as $product) {
             $totalPrice += $product->price * $cartItems[$product->id]['quantity'];
             $line_items[] = [
@@ -39,6 +42,11 @@ class CheckoutController extends Controller
                 ],
                 'quantity' => $cartItems[$product->id]['quantity'],
             ];
+            $item = new OrderItem();
+            $item->product_id = $product->id;
+            $item->unit_price = $product->price;
+            $item->quantity = $cartItems[$product->id]['quantity'];
+            $collectionItems->push($item);
         }
 
         $stripe = new \Stripe\StripeClient(getenv('STRIPE_SECRET_KEY'));
@@ -54,8 +62,7 @@ class CheckoutController extends Controller
             'total_price' => $totalPrice,
             'status' => OrderStatus::Unpaid,
             'created_by' => $user->id,
-            'updated_by' => $user->id,
-            'session_id' => $session->id
+            'updated_by' => $user->id
         ]);
 
 
@@ -69,7 +76,12 @@ class CheckoutController extends Controller
             'session_id' => $session->id
         ]);
 
-        CartItem::where(['user_id' => $user->id])->delete();
+        foreach ($collectionItems as $item) {
+            $item->order_id = $order->id;
+            $item->save();
+        }
+
+
 
         return redirect($session->url);
     }
@@ -125,7 +137,9 @@ class CheckoutController extends Controller
 
             $payment->status = PaymentStatus::Paid;
             $payment->update();
-
+            /** @var \App\Models\User $user */
+            $user = $request->user();
+            CartItem::where(['user_id' => $user->id])->delete();
             $order = $payment->order;
             $order->status = OrderStatus::Paid;
             $order->update();
