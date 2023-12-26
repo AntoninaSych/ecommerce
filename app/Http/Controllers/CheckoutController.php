@@ -189,7 +189,7 @@ class CheckoutController extends Controller
 
         $stripe = new \Stripe\StripeClient(getenv('STRIPE_SECRET_KEY'));
 
-        $endpoint_secret = 'whsec_149be12a593b795831daeca2d26d2b0c9dc1d9711b41df0c2ba015cd474a60ba';
+        $endpoint_secret = env('STRIPE_SECRET_HOOK');
 
         $payload = @file_get_contents('php://input');
         $sig_header = $_SERVER['HTTP_STRIPE_SIGNATURE'];
