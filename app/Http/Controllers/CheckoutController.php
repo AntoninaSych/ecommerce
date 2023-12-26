@@ -82,7 +82,6 @@ class CheckoutController extends Controller
         }
 
 
-
         return redirect($session->url);
     }
 
@@ -154,6 +153,40 @@ class CheckoutController extends Controller
     public function failure(Request $request)
     {
         return view('checkout.failure', ['message' => "Payment doesn't exist"]);
+    }
+
+    public function checkoutUnpaid(Order $order, Request $request)
+    {
+        /** @var \App\Models\User $user */
+        $user = $request->user();
+
+        foreach ($order->items as $item) {
+            $line_items[] = [
+                'price_data' => [
+                    'currency' => 'usd',
+                    'product_data' => [
+                        'name' => $item->product->title,
+                        'images' => [$item->product->image]
+                    ],
+                    'unit_amount' => $item->product->price * 100,
+                ],
+                'quantity' => $item->quantity,
+            ];
+        }
+
+        $stripe = new \Stripe\StripeClient(getenv('STRIPE_SECRET_KEY'));
+
+        $session = $stripe->checkout->sessions->create([
+            'line_items' => $line_items,
+            'mode' => 'payment',
+            'success_url' => route('checkout.success', [], true) . '?session_id={CHECKOUT_SESSION_ID}',
+            'cancel_url' => route('checkout.failure', [], true),
+        ]);
+        $p = $order->payment;
+        $p->session_id = $session->id;
+        $p->save();
+
+        return redirect($session->url);
     }
 
 }

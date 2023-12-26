@@ -38,7 +38,7 @@
                         </td>
                         <td class="py-1 px-2 flex gap-2 w-[100px]">
                             @if (!$order->isPaid())
-                                <form action="{{ route('cart.checkout-order', $order) }}"
+                                <form action="{{ route('checkout.unpaid', $order)}}"
                                       method="POST">
                                     @csrf
                                     <button class="flex items-center py-1 btn-primary whitespace-nowrap">
