@@ -81,6 +81,7 @@ class CheckoutController extends Controller
             $item->save();
         }
 
+        CartItem::where(['user_id' => $user->id])->delete();
 
         return redirect($session->url);
     }
@@ -126,28 +127,23 @@ class CheckoutController extends Controller
             if (!$session) {
                 return view('checkout.failure');
             }
-            $customer = $stripe->customers->retrieve($session->customer);
-
-            $payment = Payment::query()->where(['session_id' => $session->id, 'status' => PaymentStatus::Pending])->first();
+            $payment = Payment::query()->where(['session_id' => $session->id])->whereIn('status', [PaymentStatus::Pending, PaymentStatus::Paid])->first();
 
             if (is_null($payment)) {
                 return view('checkout.failure', ['message' => "Invalid session ID."]);
             }
+            if ($payment->status === PaymentStatus::Pending) {
+                $this->updateStatus($payment);
+            }
+            $customer = $stripe->customers->retrieve($session->customer);
 
-            $payment->status = PaymentStatus::Paid;
-            $payment->update();
-            /** @var \App\Models\User $user */
-            $user = $request->user();
-            CartItem::where(['user_id' => $user->id])->delete();
-            $order = $payment->order;
-            $order->status = OrderStatus::Paid;
-            $order->update();
+            return view('checkout.success')->with(['customer' => $customer]);
         } catch (\Throwable $e) {
             Log::error('Payment:error', ['message' => $e->getMessage()]);
             return view('checkout.failure', ['message' => "Payment doesn't exist"]);
         }
 
-        return view('checkout.success')->with(['customer' => $customer]);
+
     }
 
     public function failure(Request $request)
@@ -186,6 +182,55 @@ class CheckoutController extends Controller
         $order->payment->save();
 
         return redirect($session->url);
+    }
+
+    public function webhook()
+    {
+
+        $stripe = new \Stripe\StripeClient(getenv('STRIPE_SECRET_KEY'));
+
+        $endpoint_secret = 'whsec_149be12a593b795831daeca2d26d2b0c9dc1d9711b41df0c2ba015cd474a60ba';
+
+        $payload = @file_get_contents('php://input');
+        $sig_header = $_SERVER['HTTP_STRIPE_SIGNATURE'];
+        $event = null;
+
+        try {
+            $event = \Stripe\Webhook::constructEvent(
+                $payload, $sig_header, $endpoint_secret
+            );
+        } catch (\UnexpectedValueException $e) {
+            // Invalid payload
+            return response('', 401);
+            exit();
+        } catch (\Stripe\Exception\SignatureVerificationException $e) {
+            // Invalid signature
+            return response('', 402);
+            exit();
+        }
+
+// Handle the event
+        switch ($event->type) {
+            case 'checkout.session.completed':
+                $paymentIntent = $event->data->object;
+                $payment = Payment::query()->where(['session_id' => $paymentIntent['id'], 'status' => [PaymentStatus::Pending]])->first();
+                if ($payment) {
+                    $this->updateStatus($payment);
+                }
+            default:
+                echo 'Received unknown event type ' . $event->type;
+        }
+
+        return response('', 200);
+    }
+
+    private function updateStatus($payment)
+    {
+        $payment->status = PaymentStatus::Paid;
+        $payment->update();
+        $order = $payment->order;
+        $order->status = OrderStatus::Paid;
+        $order->update();
     }
 
 }

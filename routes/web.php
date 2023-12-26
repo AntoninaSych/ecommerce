@@ -48,6 +48,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/order', [OrderController::class, 'index'])->name('order.index');
     Route::get('/order/:order', [OrderController::class, 'show'])->name('order.show');
 
-});
 
+});
+Route::post('/webhook/stripe', [CheckoutController::class, 'webhook'])->name('webhook.success');
 require __DIR__ . '/auth.php';
