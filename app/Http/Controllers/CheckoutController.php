@@ -182,9 +182,8 @@ class CheckoutController extends Controller
             'success_url' => route('checkout.success', [], true) . '?session_id={CHECKOUT_SESSION_ID}',
             'cancel_url' => route('checkout.failure', [], true),
         ]);
-        $p = $order->payment;
-        $p->session_id = $session->id;
-        $p->save();
+        $order->payment->session_id = $session->id;
+        $order->payment->save();
 
         return redirect($session->url);
     }
