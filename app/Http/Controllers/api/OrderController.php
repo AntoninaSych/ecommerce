@@ -4,6 +4,7 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\OrderListResource;
+use App\Http\Resources\OrderResource;
 use App\Models\Order;
 use Illuminate\Http\Request;
 
@@ -27,5 +28,10 @@ class OrderController extends Controller
             ->paginate($perPage);
 
         return OrderListResource::collection($query);
+    }
+
+    public function view(Order $order)
+    {
+        return new OrderResource($order);
     }
 }

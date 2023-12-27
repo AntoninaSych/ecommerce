@@ -22,7 +22,7 @@ Route::middleware(['auth:sanctum', 'admin'])->group(function () {
 
     Route::apiResource('products', ProductController::class);
     Route::get('orders', [OrderController::class, 'index']);
-    Route::get('order/{order}', [OrderController::class, 'show']);
+    Route::get('orders/{order}', [OrderController::class, 'view']);
 });
 
 Route::post('/login', [AuthController::class, 'login']);

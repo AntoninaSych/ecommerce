@@ -53,6 +53,11 @@ export function getProduct({commit}, id) {
     return axiosClient.get(`/products/${id}`)
 }
 
+export function getOrder({commit}, id) {
+    return axiosClient.get(`/orders/${id}`)
+}
+
+
 export function createProduct({commit}, product) {
     if (product.image instanceof File) {
         const form = new FormData();

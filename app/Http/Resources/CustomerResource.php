@@ -21,9 +21,9 @@ class CustomerResource extends JsonResource
             'id' => $this->id,
             'first_name' => $this->customer->first_name,
             'last_name' => $this->customer->last_name,
-            'email' => $this->email,
+//            'email' => $this->email,
 //            'created_at' => (new DateTime($this->created_at))->format('Y-m-d H:i:s'),
-            'phone' => $this->customer->phone
+//            'phone' => $this->customer->phone
         ];
     }
 }
