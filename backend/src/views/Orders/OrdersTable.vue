@@ -65,16 +65,8 @@
         <td class="border-b p-2"> {{ order.customer.first_name }} {{ order.customer.last_name }}</td>
         <td class="border-b p-2 max-w-[200px] whitespace-nowrap overflow-hidden text-ellipsis">
 
-          <small class="text-white py-1 px-2 rounded"
-                 :class="{
-                                      'bg-emerald-500' : ['paid','completed'].includes(order.status) ,
-                                      'bg-red-400': order.status  ==='canceled',
-                                      'bg-gray-400': order.status  ==='unpaid',
-                                      'bg-blue-300': order.status  ==='shipped'
-                                      }">
-            {{ order.status }}
-          </small
-          >
+          <OrderStatus :order="order"/>
+
         </td>
         <td class="border-b p-2"> {{ order.created_at }}</td>
         <td class="border-b p-2"> {{ order.total_price }}</td>
@@ -135,6 +127,7 @@ import {PRODUCTS_PER_PAGE} from "../../constants.js";
 import TableHeaderCell from "../../components/Table/TableHeaderCell.vue";
 import {Menu, MenuButton, MenuItems, MenuItem} from '@headlessui/vue'
 import {DotsVerticalIcon, PencilIcon, TrashIcon} from '@heroicons/vue/outline'
+import OrderStatus from "./OrderStatus.vue";
 
 
 const emit = defineEmits(['clickEdit'])

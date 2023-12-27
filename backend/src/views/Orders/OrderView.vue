@@ -3,7 +3,11 @@
   <div v-if="order">
 
     <!--  Order Details-->
-    <h2 class="text-xl font-semi-bold mt-6 pb-2 border-b  border-gray-300">Order Details</h2>
+    <h2 class="flex justify-between  items-center text-xl font-semi-bold mt-6 pb-2 border-b  border-gray-300">Order
+      Details
+      <OrderStatus :order="order"/>
+    </h2>
+
     <table>
       <tbody>
       <tr>
@@ -79,22 +83,29 @@
 
 
     <!--  Order Items-->
-    <h2 class="text-xl font-semi-bold mt-6  border-b  border-gray-300">Order Items</h2>
-    <div v-for="item of order.items" class="flex flex-col sm:flex-row items-center  gap-4">
-      <a href="#"
-         class="w-36 h-32 flex items-center justify-center overflow-hidden">
-        <img :src="item.product.image" class="object-cover flex-1" alt=""/>
-      </a>
-      <div class="flex flex-col justify-between">
-        <div class="flex justify-between mb-3">
-          <h3>
-            {{ item.product.title }}
-          </h3>
+    <div>
+      <h2 class="text-xl font-semibold mt-6 pb-2 border-b border-gray-300">Order Items</h2>
+      <div v-for="item of order.items">
+        <!-- Order Item -->
+        <div class="flex flex-col sm:flex-row items-center  gap-4">
+          <a href="#"
+             class="w-36 h-32 flex items-center justify-center overflow-hidden">
+            <img :src="item.product.image" class="object-cover" alt=""/>
+          </a>
+          <div class="flex flex-col justify-between flex-1">
+            <div class="flex justify-between mb-3">
+              <h3>
+                {{ item.product.title }}
+              </h3>
+            </div>
+            <div class="flex justify-between items-center">
+              <div class="flex items-center">Qty: {{ item.quantity }}</div>
+              <span class="text-lg font-semibold"> ${{ item.unit_price }} </span>
+            </div>
+          </div>
         </div>
-        <div class="flex justify-between items-center">
-          <div class="flex items-center">Qty: {{ item.quantity }}</div>
-          <span class="text-lg font-semibold"> ${{ item.unit_price }} </span>
-        </div>
+        <!--/ Order Item -->
+        <hr class="my-3"/>
       </div>
     </div>
     <!--  Order Items-->
@@ -107,6 +118,7 @@ import {computed, onMounted, ref} from "vue";
 import store from "../../store/index.js";
 import {useRoute} from "vue-router";
 import axiosClient from "../../axios.js";
+import OrderStatus from "./OrderStatus.vue";
 
 const order = ref({})
 const orderStatuses = ref([]);
