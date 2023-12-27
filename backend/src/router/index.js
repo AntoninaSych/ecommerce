@@ -5,6 +5,7 @@ import store from "../store/index.js";
 import ResetPassword from "../views/ResetPassword.vue";
 import AppLayout from "../components/AppLayout.vue";
 import Products from "../views/Products/Products.vue";
+import Orders from "../views/Orders/Orders.vue";
 import NotFound from "../views/NotFound.vue";
 import RequestPassword from "../views/RequestPassword.vue";
 
@@ -26,6 +27,11 @@ const routes = [
                 path: 'products',
                 name: 'app.products',
                 component: Products
+            },
+            {
+                path: 'orders',
+                name: 'app.orders',
+                component: Orders
             }
         ]
     },

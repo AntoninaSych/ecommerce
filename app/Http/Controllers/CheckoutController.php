@@ -23,7 +23,6 @@ class CheckoutController extends Controller
     {
         /** @var \App\Models\User $user */
         $user = $request->user();
-
         list($products, $cartItems) = Cart::getProductsAndCartItems();
 
         $line_items = [];
@@ -186,7 +185,8 @@ class CheckoutController extends Controller
 
     public function webhook()
     {
-
+        // stripe listen --forward-to  192.168.56.10/webhook/stripe
+        //command for test from VM: stripe trigger payment_intent.succeeded
         $stripe = new \Stripe\StripeClient(getenv('STRIPE_SECRET_KEY'));
 
         $endpoint_secret = env('STRIPE_SECRET_HOOK');

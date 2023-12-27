@@ -87,3 +87,24 @@ export function updateProduct({commit}, product) {
 export function deleteProduct({commit}, id) {
     return axiosClient.delete(`/products/${id}`)
 }
+
+
+export function getOrders({commit}, {
+    url = null,
+    search = '',
+    per_page = PRODUCTS_PER_PAGE,
+    sort_field,
+    sort_direction
+} = {}) {
+    commit('setOrders', [true])
+    url = url || 'orders';
+    return axiosClient.get(url, {
+        params: {search, per_page, sort_field, sort_direction}
+    })
+        .then(res => {
+            commit('setOrders', [false, res.data])
+        })
+        .catch(() => {
+            commit('setOrders', [false])
+        })
+}
