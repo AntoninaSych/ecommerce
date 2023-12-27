@@ -1,4 +1,5 @@
 <template>
+
   <div v-if="order">
 
     <!--  Order Details-->
@@ -16,10 +17,9 @@
       <tr>
         <td class="font-bold py-1 px-2">Order Status</td>
         <td>
-         <span
-             class="text-white py-1 px-2 rounded"
-             :class="{'bg-emerald-500' : order.status === 'paid','bg-gray-400' : order.status !== 'paid' }"
-         >{{ order.status }} </span>
+          <select v-model="order.status" @change="onStatusChange">
+            <option v-for="status of orderStatuses" :value="status">{{ status }}</option>
+          </select>
         </td>
       </tr>
       <tr>
@@ -106,21 +106,34 @@
 import {computed, onMounted, ref} from "vue";
 import store from "../../store/index.js";
 import {useRoute} from "vue-router";
+import axiosClient from "../../axios.js";
 
 const order = ref({})
+const orderStatuses = ref([]);
 const billingAddress = ref({})
 const shippingAddress = ref({})
 const customer = ref({})
 const orders = computed(() => store.state.orders)
 const route = useRoute()
 onMounted(() => {
+  axiosClient.get(`/orders/statuses`)
+      .then(({data}) => orderStatuses.value = data)
   store.dispatch('getOrder', route.params.id).then((response) => {
     order.value = response.data;
     customer.value = order.value.customer;
     billingAddress.value = customer.value.billingAddress;
     shippingAddress.value = customer.value.shippingAddress
   })
-});
+
+})
+
+function onStatusChange() {
+  axiosClient.post(`/orders/change-status/${order.value.id}/${order.value.status}`)
+      .then(({data}) => {
+        store.commit('showToast', `Order status was successfully changed into "${order.value.status}"`)
+      })
+
+}
 
 
 </script>
