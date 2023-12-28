@@ -9,6 +9,7 @@ import Orders from "../views/Orders/Orders.vue";
 import NotFound from "../views/NotFound.vue";
 import RequestPassword from "../views/RequestPassword.vue";
 import OrderView from "../views/Orders/OrderView.vue";
+import Users from "../views/Users/Users.vue";
 
 const routes = [
     {
@@ -28,6 +29,11 @@ const routes = [
                 path: 'products',
                 name: 'app.products',
                 component: Products
+            },
+            {
+                path: 'users',
+                name: 'app.users',
+                component: Users
             },
             {
                 path: 'orders',

@@ -6,13 +6,16 @@ namespace App\Http\Controllers;
 use App\Classes\Helpers\Cart;
 use App\Enums\OrderStatus;
 use App\Enums\PaymentStatus;
+use App\Mail\NewOrderEmail;
 use App\Models\CartItem;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Payment;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Stripe\Checkout\Session;
 use Stripe\Customer;
 
@@ -231,6 +234,10 @@ class CheckoutController extends Controller
         $order = $payment->order;
         $order->status = OrderStatus::Paid;
         $order->update();
+        $adminUsers = User::where('is_admin', 1)->get();
+        foreach ([...$adminUsers, $order->user] as $user) {
+            Mail::to($user)->send(new NewOrderEmail($order, (bool)$user->is_admin));
+        }
     }
 
 }
