@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 use  \App\Http\Controllers\api\OrderController;
 use \App\Http\Controllers\Api\AuthController;
 use  \App\Http\Controllers\api\UserController;
-
+use App\Http\Controllers\Api\CustomerController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -20,6 +20,8 @@ Route::get('/orders/statuses', [OrderController::class, 'getStatuses']);
 
 Route::middleware(['auth:sanctum', 'admin'])->group(function () {
     Route::get('/user', [AuthController::class, 'getUser']);
+    Route::apiResource('customers', CustomerController::class);
+    Route::get('/countries', [CustomerController::class, 'countries']);
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::apiResource('users', UserController::class);
     Route::apiResource('products', ProductController::class);

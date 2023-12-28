@@ -32,6 +32,7 @@ class CustomerRequest extends FormRequest
             'email' => ['required', 'email'],
             'status' => ['required', 'boolean'],
 
+
             'shippingAddress.address1' => ['required'],
             'shippingAddress.address2' => ['required'],
             'shippingAddress.city' => ['required'],

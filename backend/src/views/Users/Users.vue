@@ -20,10 +20,9 @@ import UsersTable from "./UsersTable.vue";
 
 const DEFAULT_USER = {
   id: '',
-  title: '',
-  description: '',
-  image: '',
-  price: ''
+  name: '',
+  email: '',
+  created_at: ''
 }
 
 const users = computed(() => store.state.users);
