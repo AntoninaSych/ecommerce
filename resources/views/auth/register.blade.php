@@ -1,5 +1,9 @@
 <x-app-layout>
+
     <div class="w-[400px] mx-auto p-6 my-16">
+        @if(session('error'))
+            <div class="bg-red-600 py-2 px-3 text-white mb-4 rounded">{{session('error')}}</div>
+        @endif
         <form method="POST" action="{{ route('register') }}">
             @csrf
 
