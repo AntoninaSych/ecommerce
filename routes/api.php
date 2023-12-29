@@ -7,6 +7,7 @@ use \App\Http\Controllers\Api\AuthController;
 use  \App\Http\Controllers\api\UserController;
 use App\Http\Controllers\Api\CustomerController;
 use App\Http\Controllers\api\DashboardController;
+use \App\Http\Controllers\ReportController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -40,6 +41,10 @@ Route::middleware(['auth:sanctum', 'admin'])->group(function () {
     Route::post('orders/change-status/{order}/{status}', [OrderController::class, 'changeStatus']);
     Route::get('orders/{order}', [OrderController::class, 'view']);
     Route::get('orders', [OrderController::class, 'index']);
+
+    // Report routes
+    Route::get('/report/orders', [ReportController::class, 'orders']);
+    Route::get('/report/customers', [ReportController::class, 'customers']);
 
 });
 
