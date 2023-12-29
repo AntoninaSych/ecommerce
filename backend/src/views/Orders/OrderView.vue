@@ -1,7 +1,6 @@
 <template>
 
   <div v-if="order">
-
     <!--  Order Details-->
     <h2 class="flex justify-between  items-center text-xl font-semi-bold mt-6 pb-2 border-b  border-gray-300">Order
       Details

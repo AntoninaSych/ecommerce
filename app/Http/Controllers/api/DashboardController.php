@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\api;
+namespace App\Http\Controllers\Api;
 
 use App\Enums\AddressType;
 use App\Enums\CustomerStatus;
@@ -10,23 +10,15 @@ use App\Http\Resources\Dashboard\OrderResource;
 use App\Models\Customer;
 use App\Models\Order;
 use App\Models\Product;
-
-<<<<
-<<< Updated upstream
 use App\Traits\ReportTrait;
-=======
->>>>>>> Stashed changes
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
-<<<<<<< Updated upstream
     use ReportTrait;
 
-=======
->>>>>>> Stashed changes
     public function activeCustomers()
     {
         return Customer::where('status', CustomerStatus::Active->value)->count();
@@ -34,12 +26,7 @@ class DashboardController extends Controller
 
     public function activeProducts()
     {
-<<<<<<< Updated upstream
         return Product::where('published', '=', 1)->count();
-=======
-        // TODO Implement where for active products
-        return Product::count();
->>>>>>> Stashed changes
     }
 
     public function paidOrders()
@@ -62,11 +49,7 @@ class DashboardController extends Controller
         if ($fromDate) {
             $query->where('created_at', '>', $fromDate);
         }
-<<<<<<< Updated upstream
         return round($query->sum('total_price'));
-=======
-        return $query->sum('total_price');
->>>>>>> Stashed changes
     }
 
     public function ordersByCountry()
@@ -79,12 +62,8 @@ class DashboardController extends Controller
             ->join('countries AS c', 'a.country_code', '=', 'c.code')
             ->where('status', OrderStatus::Paid->value)
             ->where('a.type', AddressType::Billing->value)
-<<<<<<< Updated upstream
-            ->groupBy('c.name');
-=======
             ->groupBy('c.name')
         ;
->>>>>>> Stashed changes
 
         if ($fromDate) {
             $query->where('orders.created_at', '>', $fromDate);
@@ -120,23 +99,4 @@ class DashboardController extends Controller
                 ->get()
         );
     }
-<<<<<<< Updated upstream
-=======
-
-    private function getFromDate()
-    {
-        $request = \request();
-        $paramDate = $request->get('d');
-        $array = [
-            '1d' => Carbon::now()->subDays(1),
-            '1k' => Carbon::now()->subDays(7),
-            '2k' => Carbon::now()->subDays(14),
-            '1m' => Carbon::now()->subDays(30),
-            '3m' => Carbon::now()->subDays(60),
-            '6m' => Carbon::now()->subDays(180),
-        ];
-
-        return $array[$paramDate] ?? null;
-    }
->>>>>>> Stashed changes
 }

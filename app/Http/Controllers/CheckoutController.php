@@ -27,6 +27,10 @@ class CheckoutController extends Controller
     {
         /** @var \App\Models\User $user */
         $user = $request->user();
+        $customer = $user->customer;
+        if (!$customer->billingAddress || !$customer->shippingAddress) {
+            return redirect()->route('profile.show')->with('error', 'Please provide your address details first.');
+        }
         list($products, $cartItems) = Cart::getProductsAndCartItems();
 
         $line_items = [];

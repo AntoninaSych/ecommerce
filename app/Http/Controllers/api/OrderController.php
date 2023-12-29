@@ -1,16 +1,18 @@
 <?php
 
-namespace App\Http\Controllers\api;
+namespace App\Http\Controllers\Api;
 
 use App\Enums\OrderStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\OrderListResource;
 use App\Http\Resources\OrderResource;
+use App\Http\Resources\ProductListResource;
+
 use App\Mail\UpdateOrderEmail;
+use App\Models\Api\Product;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
-
 
 class OrderController extends Controller
 {
@@ -42,18 +44,18 @@ class OrderController extends Controller
         return new OrderResource($order);
     }
 
+    public function getStatuses()
+    {
+        return OrderStatus::getStatuses();
+    }
+
     public function changeStatus(Order $order, $status)
     {
         $order->status = $status;
         $order->save();
 
-        Mail::to($order->user->email)->send(new UpdateOrderEmail($order));
+        Mail::to($order->user)->send(new UpdateOrderEmail($order));
 
         return response('', 200);
-    }
-
-    public function getStatuses()
-    {
-        return OrderStatus::getStatuses();
     }
 }
