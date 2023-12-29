@@ -65,5 +65,4 @@
         </x-primary-button>
     </form>
 
-
 </x-app-layout>

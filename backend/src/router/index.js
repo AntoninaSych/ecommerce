@@ -5,6 +5,7 @@ import store from "../store/index.js";
 import ResetPassword from "../views/ResetPassword.vue";
 import AppLayout from "../components/AppLayout.vue";
 import Products from "../views/Products/Products.vue";
+import CustomerView from "../views/Customers/CustomerView.vue";
 import Orders from "../views/Orders/Orders.vue";
 import NotFound from "../views/NotFound.vue";
 import RequestPassword from "../views/RequestPassword.vue";
@@ -40,6 +41,11 @@ const routes = [
                 path: 'customers',
                 name: 'app.customers',
                 component: Customers
+            },
+            {
+                path: 'customers/:id',
+                name: 'app.customers.view',
+                component: CustomerView
             },
             {
                 path: 'orders',
