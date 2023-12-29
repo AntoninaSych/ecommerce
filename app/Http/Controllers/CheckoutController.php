@@ -14,6 +14,7 @@ use App\Models\Payment;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Stripe\Checkout\Session;
@@ -56,32 +57,39 @@ class CheckoutController extends Controller
         $session = $stripe->checkout->sessions->create([
             'line_items' => $line_items,
             'mode' => 'payment',
+            'customer_creation' => 'always',
             'success_url' => route('checkout.success', [], true) . '?session_id={CHECKOUT_SESSION_ID}',
             'cancel_url' => route('checkout.failure', [], true),
         ]);
+        DB::beginTransaction();
+        try {
+            $order = Order::firstOrCreate([
+                'total_price' => $totalPrice,
+                'status' => OrderStatus::Unpaid,
+                'created_by' => $user->id,
+                'updated_by' => $user->id
+            ]);
 
-        $order = Order::firstOrCreate([
-            'total_price' => $totalPrice,
-            'status' => OrderStatus::Unpaid,
-            'created_by' => $user->id,
-            'updated_by' => $user->id
-        ]);
 
+            $payment = Payment::firstOrCreate([
+                'order_id' => $order->id,
+                'amount' => $totalPrice,
+                'status' => PaymentStatus::Pending,
+                'type' => 'cc',
+                'created_by' => $user->id,
+                'updated_by' => $user->id,
+                'session_id' => $session->id
+            ]);
 
-        $payment = Payment::firstOrCreate([
-            'order_id' => $order->id,
-            'amount' => $totalPrice,
-            'status' => PaymentStatus::Pending,
-            'type' => 'cc',
-            'created_by' => $user->id,
-            'updated_by' => $user->id,
-            'session_id' => $session->id
-        ]);
-
-        foreach ($collectionItems as $item) {
-            $item->order_id = $order->id;
-            $item->save();
+            foreach ($collectionItems as $item) {
+                $item->order_id = $order->id;
+                $item->save();
+            }
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            Log::critical(__METHOD__ . ' method has  an error: ' . $e->getMessage());
         }
+        DB::commit();
 
         CartItem::where(['user_id' => $user->id])->delete();
 
@@ -110,6 +118,7 @@ class CheckoutController extends Controller
         $session = \Stripe\Checkout\Session::create([
             'line_items' => $lineItems,
             'mode' => 'payment',
+
             'success_url' => route('checkout.success', [], true) . '?session_id={CHECKOUT_SESSION_ID}',
             'cancel_url' => route('checkout.failure', [], true),
         ]);
@@ -188,8 +197,9 @@ class CheckoutController extends Controller
 
     public function webhook()
     {
+        // stripe login
         // stripe listen --forward-to  192.168.56.10/webhook/stripe
-        //command for test from VM: stripe trigger payment_intent.succeeded
+        // stripe trigger payment_intent.succeeded     :command for test from VM
         $stripe = new \Stripe\StripeClient(getenv('STRIPE_SECRET_KEY'));
 
         $endpoint_secret = env('STRIPE_SECRET_HOOK');
@@ -229,14 +239,29 @@ class CheckoutController extends Controller
 
     private function updateStatus($payment)
     {
-        $payment->status = PaymentStatus::Paid;
-        $payment->update();
-        $order = $payment->order;
-        $order->status = OrderStatus::Paid;
-        $order->update();
-        $adminUsers = User::where('is_admin', 1)->get();
-        foreach ([...$adminUsers, $order->user] as $user) {
-            Mail::to($user)->send(new NewOrderEmail($order, (bool)$user->is_admin));
+        DB::beginTransaction();
+        try {
+            $payment->status = PaymentStatus::Paid;
+            $payment->update();
+            $order = $payment->order;
+            $order->status = OrderStatus::Paid;
+            $order->update();
+
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            Log::critical(__METHOD__ . ' method doesn\'t work' . $e->getMessage());
+            throw $e;
+        }
+        DB::commit();
+
+
+        try {
+            $adminUsers = User::where('is_admin', 1)->get();
+            foreach ([...$adminUsers, $order->user] as $user) {
+                Mail::to($user)->send(new NewOrderEmail($order, (bool)$user->is_admin));
+            }
+        } catch (\Throwable $e) {
+            Log::critical(__METHOD__ . 'in method. Email sending doesn\'t work');
         }
     }
 

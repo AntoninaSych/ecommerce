@@ -11,7 +11,11 @@ class OrderResource extends JsonResource
     /**
      * Transform the resource into an array.
      *
+     * <<<<<<< Updated upstream
      * @param \Illuminate\Http\Request $request
+     * =======
+     * @param \Illuminate\Http\Request $request
+     * >>>>>>> Stashed changes
      * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
     public function toArray($request)

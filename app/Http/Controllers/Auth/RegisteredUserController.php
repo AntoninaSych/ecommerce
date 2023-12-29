@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 
@@ -57,6 +58,7 @@ class RegisteredUserController extends Controller
             Auth::login($user);
         } catch (\Throwable $e) {
             DB::rollBack();
+            Log::critical(__METHOD__ . ' method doesn\'t work' . $e->getMessage());
             return back()->withInput()->with(['error' => 'Unable  register right now']);
         }
 
