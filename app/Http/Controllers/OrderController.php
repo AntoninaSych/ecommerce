@@ -14,6 +14,7 @@ class OrderController extends Controller
         $user = $request->user();
 
         $orders = Order::query()
+            ->withCount('items')
             ->where(['created_by' => $user->id])
             ->orderBy('created_at', 'desc')
             ->paginate(15);

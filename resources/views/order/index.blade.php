@@ -34,7 +34,7 @@
                         </td>
                         <td class="py-1 px-2">${{$order->total_price}}</td>
                         <td class="py-1 px-2 whitespace-nowrap">
-                            {{$order->items->sum("quantity")}} item(s)
+                            {{$order->items_count}} item(s)
                         </td>
                         <td class="py-1 px-2 flex gap-2 w-[100px]">
                             @if (!$order->isPaid())
