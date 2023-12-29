@@ -157,8 +157,11 @@ function updateDashboard() {
     loading.value.paidOrders = false;
   })
   axiosClient.get(`/dashboard/income-amount`, {params: {d}}).then(({data}) => {
-    totalIncome.value = new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD'})
-        .format(data);
+    totalIncome.value = new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 0
+    }).format(data);
     loading.value.totalIncome = false;
   })
   axiosClient.get(`/dashboard/orders-by-country`, {params: {d}}).then(({data: countries}) => {
