@@ -64,7 +64,8 @@
                         <CustomInput v-model="customer.billingAddress.zipcode" label="Zip Code"/>
                         <CustomInput type="select" :select-options="countries"
                                      v-model="customer.billingAddress.country_code" label="Country"/>
-                        <CustomInput v-if="!billingCountry.states" v-model="customer.billingAddress.state"
+                        <CustomInput v-if="billingCountry && !billingCountry.states"
+                                     v-model="customer.billingAddress.state"
                                      label="State"/>
                         <CustomInput v-else type="select" :select-options="billingStateOptions"
                                      v-model="customer.billingAddress.state" label="State"/>
@@ -81,7 +82,8 @@
                         <CustomInput v-model="customer.shippingAddress.zipcode" label="Zip Code"/>
                         <CustomInput type="select" :select-options="countries"
                                      v-model="customer.shippingAddress.country_code" label="Country"/>
-                        <CustomInput v-if="!shippingCountry.states" v-model="customer.shippingAddress.state"
+                        <CustomInput v-if="shippingCountry && !shippingCountry.states"
+                                     v-model="customer.shippingAddress.state"
                                      label="State"/>
                         <CustomInput v-else type="select" :select-options="shippingStateOptions"
                                      v-model="customer.shippingAddress.state" label="State"/>
