@@ -182,6 +182,7 @@ function deleteOrder(order) {
 
   store.dispatch('deleteOrder', order.id)
       .then(res => {
+        store.commit('showToast', `Order was successfully removed`)
         store.dispatch('getOrders')
       })
 }

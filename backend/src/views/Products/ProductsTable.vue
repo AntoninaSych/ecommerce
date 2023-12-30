@@ -225,6 +225,7 @@ function deleteProduct(product) {
 
   store.dispatch('deleteProduct', product.id)
       .then(res => {
+        store.commit('showToast', `Product was successfully removed`)
         store.dispatch('getProducts')
       })
 }
