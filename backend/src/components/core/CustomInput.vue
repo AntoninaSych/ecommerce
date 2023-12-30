@@ -23,6 +23,23 @@
                 :class="inputClasses"
                 :placeholder="label"></textarea>
       </template>
+
+      <template v-else-if="type === 'richtext'">
+        <ckeditor :editor="editor"
+                  @input="onChange"
+                  :required="required"
+                  :model-value="props.modelValue"
+                  :config="editorConfig"></ckeditor>
+
+        <!--        <textarea :name="name"-->
+        <!--                :required="required"-->
+        <!--                :value="props.modelValue"-->
+        <!--                @input="emit('update:modelValue', $event.target.value)"-->
+        <!--                :class="inputClasses"-->
+        <!--                :placeholder="label"></textarea>-->
+      </template>
+
+
       <template v-else-if="type === 'file'">
         <input :type="type"
                :name="name"
@@ -64,6 +81,7 @@
 <script setup>
 
 import {computed, ref} from "vue";
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 
 const props = defineProps({
   modelValue: [String, Number, File],
@@ -86,8 +104,13 @@ const props = defineProps({
   errors: {
     type: Array,
     required: false
+  },
+  editConfig: {
+    type: Object,
+    default: () => ({})
   }
 })
+const editor = ClassicEditor;
 
 const id = computed(() => {
   if (props.id) return props.id;
@@ -121,5 +144,11 @@ function onChange(value) {
 </script>
 
 <style scoped>
+/deep/ .ck-editor {
+  width: 100%;
+}
 
+/deep/ .ck-content {
+  min-height: 200px;
+}
 </style>

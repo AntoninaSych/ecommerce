@@ -5,7 +5,7 @@
     <div class="bg-white p-4 rounded-lg shadow animate-fade-in-down">
 
       <Spinner v-if="loading"
-               class="absolute left-0 top-0 bg-white right-0 bottom-0 flex items-center justify-center"/>
+               class="absolute left-0 top-0 bg-white right-0 bottom-0 flex items-center justify-center z-50"/>
 
 
       <form @submit.prevent="onSubmit">
@@ -13,7 +13,7 @@
           <CustomInput class="mb-2" v-model="product.title" label="Product Title"/>
           <CustomInput type="file" class="mb-2" label="Product Image"
                        @change="file=>product.image = file"/>
-          <CustomInput type="textarea" class="mb-2" v-model="product.description" label="Description"/>
+          <CustomInput type="richtext" class="mb-2" v-model="product.description" label="Description"/>
           <CustomInput type="number" class="mb-2" v-model="product.price" label="Price" prepend="$"/>
           <CustomInput type="checkbox" class="mb-2" v-model="product.published" label="Published"/>
         </div>
@@ -54,7 +54,7 @@ const product = ref({
   id: null,
   title: null,
   image: null,
-  description: null,
+  description: "",
   price: null,
   published: null
 })
