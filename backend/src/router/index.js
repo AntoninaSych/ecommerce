@@ -5,6 +5,7 @@ import store from "../store/index.js";
 import ResetPassword from "../views/ResetPassword.vue";
 import AppLayout from "../components/AppLayout.vue";
 import Products from "../views/Products/Products.vue";
+import ProductForm from "../views/Products/ProductForm.vue";
 import CustomerView from "../views/Customers/CustomerView.vue";
 import Orders from "../views/Orders/Orders.vue";
 import NotFound from "../views/NotFound.vue";
@@ -35,6 +36,19 @@ const routes = [
                 path: 'products',
                 name: 'app.products',
                 component: Products
+            },
+            {
+                path: 'products/create',
+                name: 'app.products.create',
+                component: ProductForm
+            },
+            {
+                path: 'products/:id',
+                name: 'app.products.edit',
+                component: ProductForm,
+                props: {
+                    id: (value) => /^\d+$/.test(value)
+                }
             },
             {
                 path: 'users',

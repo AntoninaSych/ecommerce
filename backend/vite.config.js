@@ -5,7 +5,7 @@ import vue from '@vitejs/plugin-vue'
 export default defineConfig({
   server: {
     host: '192.168.56.10',
-    port: '5175',
+    // port: '5175',
     watch: {
       usePolling: true,
     },
