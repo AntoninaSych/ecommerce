@@ -7,6 +7,7 @@ use App\Http\Requests\ProductRequest;
 use App\Http\Resources\ProductListResource;
 use App\Http\Resources\ProductResource;
 use App\Models\Api\Product;
+use App\Models\ProductImage;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
@@ -49,17 +50,12 @@ class ProductController extends Controller
         $data['created_by'] = $request->user()->id;
         $data['updated_by'] = $request->user()->id;
 
-        /** @var \Illuminate\Http\UploadedFile $image */
-        $image = $data['image'] ?? null;
-        // Check if image was given and save on local file system
-        if ($image) {
-            $relativePath = $this->saveImage($image);
-            $data['image'] = URL::to(Storage::url($relativePath));
-            $data['image_mime'] = $image->getClientMimeType();
-            $data['image_size'] = $image->getSize();
-        }
+        /** @var \Illuminate\Http\UploadedFile[] $images */
+        $images = $data['images'] ?? [];
 
         $product = Product::create($data);
+
+        $this->saveImages($images, $product);
 
         return new ProductResource($product);
     }
@@ -87,25 +83,20 @@ class ProductController extends Controller
         $data = $request->validated();
         $data['updated_by'] = $request->user()->id;
 
-        /** @var \Illuminate\Http\UploadedFile $image */
-        $image = $data['image'] ?? null;
-        // Check if image was given and save on local file system
-        if ($image) {
-            $relativePath = $this->saveImage($image);
-            $data['image'] = URL::to(Storage::url($relativePath));
-            $data['image_mime'] = $image->getClientMimeType();
-            $data['image_size'] = $image->getSize();
+        /** @var \Illuminate\Http\UploadedFile[] $images */
+        $images = $data['images'] ?? [];
+        $deletedImages = $data['deleted_images'] ?? [];
 
-            // If there is an old image, delete it
-            if ($product->image) {
-                Storage::deleteDirectory('/public/' . dirname($product->image));
-            }
+        $this->saveImages($images, $product);
+        if (count($deletedImages) > 0) {
+            $this->deleteImages($deletedImages, $product);
         }
 
         $product->update($data);
 
         return new ProductResource($product);
     }
+
 
     /**
      * Remove the specified resource from storage.
@@ -131,5 +122,52 @@ class ProductController extends Controller
         }
 
         return $path . '/' . $image->getClientOriginalName();
+    }
+
+    /**
+     *
+     *
+     * @param UploadedFile[] $images
+     * @return string
+     * @throws \Exception
+     * @author Zura Sekhniashvili <zurasekhniashvili@gmail.com>
+     */
+    private function saveImages($images, Product $product)
+    {
+        foreach ($images as $i => $image) {
+            $path = 'images/' . Str::random();
+            if (!Storage::exists($path)) {
+                Storage::makeDirectory($path, 0755, true);
+            }
+            if (!Storage::putFileAS('public/' . $path, $image, $image->getClientOriginalName())) {
+                throw new \Exception("Unable to save file \"{$image->getClientOriginalName()}\"");
+            }
+            $relativePath = $path . '/' . urlencode($image->getClientOriginalName());
+
+            ProductImage::create([
+                'product_id' => $product->id,
+                'path' => $relativePath,
+                'url' => URL::to(Storage::url($relativePath)),
+                'mime' => $image->getClientMimeType(),
+                'size' => $image->getSize(),
+                'position' => $i + 1
+            ]);
+        }
+    }
+
+    private function deleteImages($imageIds, Product $product)
+    {
+        $images = ProductImage::query()
+            ->where('product_id', $product->id)
+            ->whereIn('id', $imageIds)
+            ->get();
+
+        foreach ($images as $image) {
+            // If there is an old image, delete it
+            if ($image->path) {
+                Storage::deleteDirectory('/public/' . dirname($image->path));
+            }
+            $image->delete();
+        }
     }
 }

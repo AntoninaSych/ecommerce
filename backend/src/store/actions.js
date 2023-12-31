@@ -82,12 +82,11 @@ export function getOrder({commit}, id) {
     return axiosClient.get(`/orders/${id}`)
 }
 
-
 export function createProduct({commit}, product) {
-    if (product.image instanceof File) {
+    if (product.images && product.images.length) {
         const form = new FormData();
         form.append('title', product.title);
-        form.append('image', product.image);
+        product.images.forEach(im => form.append('images[]', im))
         form.append('description', product.description || '');
         form.append('published', product.published ? 1 : 0);
         form.append('price', product.price);
@@ -98,11 +97,14 @@ export function createProduct({commit}, product) {
 
 export function updateProduct({commit}, product) {
     const id = product.id
-    if (product.image instanceof File) {
+    if (product.images && product.images.length) {
         const form = new FormData();
         form.append('id', product.id);
         form.append('title', product.title);
-        form.append('image', product.image);
+        product.images.forEach(im => form.append('images[]', im))
+        if (product.deleted_images) {
+            product.deleted_images.forEach(id => form.append('deleted_images[]', id))
+        }
         form.append('description', product.description || '');
         form.append('published', product.published ? 1 : 0);
         form.append('price', product.price);
@@ -117,8 +119,6 @@ export function updateProduct({commit}, product) {
 export function deleteProduct({commit}, id) {
     return axiosClient.delete(`/products/${id}`)
 }
-
-
 
 
 export function getUsers({commit, state}, {url = null, search = '', per_page, sort_field, sort_direction} = {}) {
