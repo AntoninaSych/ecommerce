@@ -139,10 +139,11 @@ class ProductController extends Controller
             if (!Storage::exists($path)) {
                 Storage::makeDirectory($path, 0755, true);
             }
-            if (!Storage::putFileAS('public/' . $path, $image, $image->getClientOriginalName())) {
+            $name = Str::random() . '.' . $image->getClientOriginalExtension();
+            if (!Storage::putFileAS('public/' . $path, $image, $name)) {
                 throw new \Exception("Unable to save file \"{$image->getClientOriginalName()}\"");
             }
-            $relativePath = $path . '/' . urlencode($image->getClientOriginalName());
+            $relativePath = $path . '/' . urlencode($name);
 
             ProductImage::create([
                 'product_id' => $product->id,
