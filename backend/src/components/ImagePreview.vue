@@ -94,7 +94,11 @@ function removeImage(image) {
 }
 
 function revertImage(image) {
-
+  if (image.isProp) {
+    deletedImages.value = deletedImages.value.filter(id => id !== image.id)
+    image.deleted = false;
+    emit('update:deletedImages', deletedImages.value)
+  }
 }
 
 // Hooks
