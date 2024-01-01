@@ -15,6 +15,8 @@
     "axios": "^0.27.2",
     "chart.js": "^3.9.1",
     "npm-watch": "^0.11.0",
+    "sortablejs": "^1.15.1",
+    "sortablejs-vue3": "^1.2.11",
     "uuid": "^9.0.1",
     "vue": "^3.2.25",
     "vue-chartjs": "^4.1.2",

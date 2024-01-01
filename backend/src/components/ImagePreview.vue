@@ -1,7 +1,17 @@
 <template>
   <div class="flex flex-wrap gap-1">
-    <div v-for="image of imageUrls"
-         class="relative w-[120px] h-[120px] rounded border border-dashed flex items-center justify-center hover:border-purple-500 overflow-hidden">
+    <!--    <pre>-->
+    <!--      {{imageUrls.map(im=>im.id) }}-->
+    <!--    </pre>-->
+    <Sortable
+        :list="imageUrls"
+        item-key="id"
+        class="flex gap-1 flex-wrap"
+        @end="onImageDragEnd"
+    >
+      <template #item="{element:image, index}">
+        <div
+            class="relative w-[120px] h-[120px] rounded border border-dashed flex items-center justify-center hover:border-purple-500 overflow-hidden">
       <img :src="image.url" class="max-w-full max-h-full" :class="image.deleted ? 'opacity-50' : ''">
       <small v-if="image.deleted"
              class="absolute left-0 bottom-0 right-0 py-1 px-2 bg-black opacity-75 w-100 text-white justify-between items-center flex">
@@ -20,6 +30,8 @@
         </svg>
       </span>
     </div>
+      </template>
+    </Sortable>
     <div
         class="relative w-[120px] h-[120px] rounded border border-dashed flex items-center justify-center hover:border-purple-500 overflow-hidden">
       <span>
@@ -33,6 +45,7 @@
 
 <script setup>
 // Imports
+import {Sortable} from "sortablejs-vue3";
 import {v4 as uuidv4} from 'uuid';
 import {onMounted, ref, watch} from "vue";
 
@@ -43,10 +56,11 @@ import {onMounted, ref, watch} from "vue";
 const files = ref([])
 const imageUrls = ref([])
 const deletedImages = ref([])
+const imagePositions = ref([])
 
 // Props & Emit
 const props = defineProps(['modelValue', 'deletedImages', 'images'])
-const emit = defineEmits(['update:modelValue', 'update:deletedImages'])
+const emit = defineEmits(['update:modelValue', 'update:deletedImages', 'update:ImagePositions'])
 
 // Computed
 
@@ -55,9 +69,12 @@ function onFileChange($event) {
   const chosenFiles = [...$event.target.files];
   files.value = [...files.value, ...chosenFiles];
   $event.target.value = ''
+  const allPromises = [];
   for (let file of chosenFiles) {
     file.id = uuidv4()
-    readFile(file)
+    const promise = readFile(file)
+    allPromises.push(promise)
+    promise
         .then(url => {
           imageUrls.value.push({
             url,
@@ -65,6 +82,10 @@ function onFileChange($event) {
           })
         })
   }
+  Promise.all(allPromises)
+      .then(() => {
+        updateImagePositions()
+      })
   emit('update:modelValue', files.value)
 }
 
@@ -91,6 +112,7 @@ function removeImage(image) {
 
     emit('update:modelValue', files.value)
   }
+  updateImagePositions();
 }
 
 function revertImage(image) {
@@ -100,6 +122,25 @@ function revertImage(image) {
     emit('update:deletedImages', deletedImages.value)
   }
 }
+
+function onImageDragEnd(event) {
+  const {newIndex, oldIndex} = event
+
+  const [tmp] = imageUrls.value.splice(oldIndex, 1)
+
+  imageUrls.value.splice(newIndex, 0, tmp)
+  updateImagePositions()
+}
+
+function updateImagePositions() {
+  imagePositions.value = Object.fromEntries(
+      imageUrls.value.filter(im => !im.deleted)
+          .map((im, ind) => [im.id, ind + 1])
+  )
+  emit('update:imagePositions', imagePositions.value)
+
+}
+
 
 // Hooks
 watch('props.images', () => {
@@ -111,6 +152,7 @@ watch('props.images', () => {
       isProp: true
     }))
   ]
+  updateImagePositions()
 }, {immediate: true, deep: true})
 onMounted(() => {
   emit('update:modelValue', [])
