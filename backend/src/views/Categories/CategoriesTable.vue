@@ -1,7 +1,9 @@
 <template>
   <div class="bg-white p-4 rounded-lg shadow animate-fade-in-down">
     <div class="flex justify-between border-b-2 pb-3">
-
+      <div class="flex items-center">
+        <span class="ml-3">Found {{ categories.data.length }} categories</span>
+      </div>
     </div>
 
     <table class="table-auto w-full">
@@ -59,7 +61,7 @@
           {{ category.active ? 'Yes' : 'No' }}
         </td>
         <td class="border-b p-2">
-          {{ category.parent_id?.name }}
+          {{ category.parent?.name }}
         </td>
         <td class="border-b p-2">
           {{ category.created_at }}
@@ -140,10 +142,9 @@ import {Menu, MenuButton, MenuItem, MenuItems} from "@headlessui/vue";
 import {DotsVerticalIcon, PencilIcon, TrashIcon} from '@heroicons/vue/outline'
 import CategoryModal from "./CategoryModal.vue";
 
-
 const categories = computed(() => store.state.categories);
-const sortField = ref('updated_at');
-const sortDirection = ref('desc')
+const sortField = ref('name');
+const sortDirection = ref('asc')
 
 const category = ref({})
 const showCategoryModal = ref(false);
@@ -194,7 +195,7 @@ function deleteCategory(category) {
   if (!confirm(`Are you sure you want to delete the category?`)) {
     return
   }
-  store.dispatch('deleteCategory', category.id)
+  store.dispatch('deleteCategory', category)
       .then(res => {
         store.commit('showToast', 'Category was successfully deleted');
         store.dispatch('getCategories')

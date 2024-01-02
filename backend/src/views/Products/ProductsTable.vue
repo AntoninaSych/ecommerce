@@ -173,7 +173,6 @@ import {PRODUCTS_PER_PAGE} from "../../constants.js";
 import TableHeaderCell from "../../components/Table/TableHeaderCell.vue";
 import {Menu, MenuButton, MenuItems, MenuItem} from '@headlessui/vue'
 import {DotsVerticalIcon, PencilIcon, TrashIcon} from '@heroicons/vue/outline'
-import ProductModal from "./ProductModal.vue";
 
 
 const emit = defineEmits(['clickEdit'])

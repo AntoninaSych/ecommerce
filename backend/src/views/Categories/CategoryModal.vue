@@ -20,7 +20,7 @@
                        class="absolute left-0 top-0 bg-white right-0 bottom-0 flex items-center justify-center"/>
               <header class="py-3 px-4 flex justify-between items-center">
                 <DialogTitle as="h3" class="text-lg leading-6 font-medium text-gray-900">
-                  {{ category.id ? `Update category: "${props.category.name}"` : 'Create new category' }}
+                  {{ category.id ? `Update category: "${props.category.name}"` : 'Create new Category' }}
                 </DialogTitle>
                 <button
                     @click="closeModal()"
@@ -44,17 +44,19 @@
               </header>
               <form @submit.prevent="onSubmit">
                 <div class="bg-white px-4 pt-5 pb-4">
-                  <CustomInput class="mb-2" v-model="category.name" label="Name"/>
-                  <CustomInput type="select" class="mb-2"
+                  <CustomInput class="mb-2" v-model="category.name" label="Name" :errors="errors['name']"/>
+                  <CustomInput type="select"
                                :select-options="parentCategories"
+                               class="mb-2"
                                v-model="category.parent_id"
-                               label="Parent"/>
-                  <CustomInput type="checkbox" class="mb-2" v-model="category.active" label="Active"/>
+                               label="Parent" :errors="errors['parent_id']"/>
+                  <CustomInput type="checkbox" class="mb-2" v-model="category.active" label="Active"
+                               :errors="errors['active']"/>
                 </div>
                 <footer class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
                   <button type="submit"
-                          class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm
-                          bg-indigo-600 hover:bg-indigo-700 hover:text-white focus:ring-indigo-500 ">
+                          class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm
+                          text-white bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500">
                     Submit
                   </button>
                   <button type="button"
@@ -80,6 +82,13 @@ import CustomInput from "../../components/core/CustomInput.vue";
 import store from "../../store/index.js";
 import Spinner from "../../components/core/Spinner.vue";
 
+const props = defineProps({
+  modelValue: Boolean,
+  category: {
+    required: true,
+    type: Object,
+  }
+})
 const category = ref({
   id: props.category.id,
   name: props.category.name,
@@ -88,14 +97,9 @@ const category = ref({
 })
 
 const loading = ref(false)
+const errors = ref({})
 
-const props = defineProps({
-  modelValue: Boolean,
-  category: {
-    required: true,
-    type: Object,
-  }
-})
+
 
 const emit = defineEmits(['update:modelValue', 'close'])
 
@@ -103,7 +107,6 @@ const show = computed({
   get: () => props.modelValue,
   set: (value) => emit('update:modelValue', value)
 })
-
 const parentCategories = computed(() => {
   return [
     {key: '', text: 'Select Parent Category'},
@@ -115,6 +118,11 @@ const parentCategories = computed(() => {
           return true;
         })
         .map(c => ({key: c.id, text: c.name}))
+        .sort((c1, c2) => {
+          if (c1.text < c2.text) return -1;
+          if (c1.text > c2.text) return 1;
+          return 0;
+        })
   ]
 })
 
@@ -122,14 +130,15 @@ onUpdated(() => {
   category.value = {
     id: props.category.id,
     name: props.category.name,
-    active: !!props.category.active,
-    parent_id: props.category.parent_id
+    active: props.category.active,
+    parent_id: props.category.parent_id,
   }
 })
 
 function closeModal() {
   show.value = false
   emit('close')
+  errors.value = {};
 }
 
 function onSubmit() {
@@ -145,6 +154,10 @@ function onSubmit() {
             closeModal()
           }
         })
+        .catch(err => {
+          loading.value = false;
+          errors.value = err.response.data.errors
+        })
   } else {
     store.dispatch('createCategory', category.value)
         .then(response => {
@@ -157,7 +170,7 @@ function onSubmit() {
         })
         .catch(err => {
           loading.value = false;
-          debugger;
+          errors.value = err.response.data.errors
         })
   }
 }

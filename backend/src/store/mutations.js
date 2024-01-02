@@ -98,8 +98,9 @@ export function setCategories(state, [loading, data = null]) {
     if (data) {
         state.categories = {
             ...state.categories,
-            data: data.data
+            data: data.data,
         }
     }
+
     state.categories.loading = loading;
 }

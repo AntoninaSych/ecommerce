@@ -6,13 +6,12 @@
       >Add New Product
       </router-link>
     </div>
-    <ProductModal v-model="showModal" :product="productModal" @close="onModalClose"></ProductModal>
-    <ProductsTable @clickEdit="editProduct"></ProductsTable>
+  <ProductsTable @clickEdit="editProduct"></ProductsTable>
 </template>
 
 <script setup>
 import ProductsTable from "./ProductsTable.vue";
-import ProductModal from "./ProductModal.vue";
+
 import {ref} from "vue";
 import store from "../../store/index.js";
 import {data} from "autoprefixer";
@@ -25,16 +24,7 @@ const INITIAL_OBJECT = {
   price: ''
 
 }
-const showModal = ref(false);
-const productModal = ref({...INITIAL_OBJECT})
 
-
-function editProduct(product) {
-  store.dispatch('getProduct', product.id)
-      .then(({data}) => {
-        productModal.value = data
-      })
-}
 
 
 </script>

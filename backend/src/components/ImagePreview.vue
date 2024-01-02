@@ -1,8 +1,8 @@
 <template>
   <div class="flex flex-wrap gap-1">
-    <!--    <pre>-->
-    <!--      {{imageUrls.map(im=>im.id) }}-->
-    <!--    </pre>-->
+    <pre>
+      {{ imageUrls.map(im => im.id) }}
+    </pre>
     <Sortable
         :list="imageUrls"
         item-key="id"
@@ -137,7 +137,7 @@ function updateImagePositions() {
       imageUrls.value.filter(im => !im.deleted)
           .map((im, ind) => [im.id, ind + 1])
   )
-  emit('update:imagePositions', imagePositions.value)
+  emit('update:ImagePositions', imagePositions.value)
 
 }
 
