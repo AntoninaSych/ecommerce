@@ -1,42 +1,34 @@
 <template>
   <div class="bg-white p-4 rounded-lg shadow animate-fade-in-down">
     <div class="flex justify-between border-b-2 pb-3">
-      <div class="flex items-center">
-        <span class="whitespace-nowrap mr-3">Per Page</span>
-        <select @change="getUsers(null)" v-model="perPage"
-                class="appearance-none relative block w-24 px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm">
-          <option value="5">5</option>
-          <option value="10">10</option>
-          <option value="20">20</option>
-          <option value="50">50</option>
-          <option value="100">100</option>
-        </select>
-        <span class="ml-3">Found {{ users.total }} users</span>
-      </div>
-      <div>
-        <input v-model="search" @change="getUsers(null)"
-               class="appearance-none relative block w-48 px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-               placeholder="Type to Search users">
-      </div>
+
     </div>
 
     <table class="table-auto w-full">
       <thead>
       <tr>
         <TableHeaderCell field="id" :sort-field="sortField" :sort-direction="sortDirection"
-                         @click="sortUsers('id')">
+                         @click="sortCategories('id')">
           ID
         </TableHeaderCell>
         <TableHeaderCell field="name" :sort-field="sortField" :sort-direction="sortDirection"
-                         @click="sortUsers('name')">
+                         @click="sortCategories('name')">
           Name
         </TableHeaderCell>
-        <TableHeaderCell field="email" :sort-field="sortField" :sort-direction="sortDirection"
-                         @click="sortUsers('email')">
-          Email
+        <TableHeaderCell field="slug" :sort-field="sortField" :sort-direction="sortDirection"
+                         @click="sortCategories('slug')">
+          Slug
+        </TableHeaderCell>
+        <TableHeaderCell field="active" :sort-field="sortField" :sort-direction="sortDirection"
+                         @click="sortCategories('active')">
+          Active
+        </TableHeaderCell>
+        <TableHeaderCell field="parent_id" :sort-field="sortField" :sort-direction="sortDirection"
+                         @click="sortCategories('parent_id')">
+          Parent
         </TableHeaderCell>
         <TableHeaderCell field="created_at" :sort-field="sortField" :sort-direction="sortDirection"
-                         @click="sortUsers('created_at')">
+                         @click="sortCategories('created_at')">
           Create Date
         </TableHeaderCell>
         <TableHeaderCell field="actions">
@@ -44,27 +36,33 @@
         </TableHeaderCell>
       </tr>
       </thead>
-      <tbody v-if="users.loading || !users.data.length">
+      <tbody v-if="categories.loading || !categories.data.length">
       <tr>
-        <td colspan="6">
-          <Spinner v-if="users.loading"/>
+        <td colspan="7">
+          <Spinner v-if="categories.loading"/>
           <p v-else class="text-center py-8 text-gray-700">
-            There are no users
+            There are no categories
           </p>
         </td>
       </tr>
       </tbody>
       <tbody v-else>
-      <tr v-for="(user, index) of users.data">
-        <td class="border-b p-2 ">{{ user.id }}</td>
+      <tr v-for="(category, index) of categories.data">
+        <td class="border-b p-2 ">{{ category.id }}</td>
         <td class="border-b p-2 ">
-          {{ user.name }}
+          {{ category.name }}
         </td>
         <td class="border-b p-2 max-w-[200px] whitespace-nowrap overflow-hidden text-ellipsis">
-          {{ user.email }}
+          {{ category.slug }}
         </td>
         <td class="border-b p-2">
-          {{ user.created_at }}
+          {{ category.active ? 'Yes' : 'No' }}
+        </td>
+        <td class="border-b p-2">
+          {{ category.parent_id?.name }}
+        </td>
+        <td class="border-b p-2">
+          {{ category.created_at }}
         </td>
         <td class="border-b p-2 ">
           <Menu as="div" class="relative inline-block text-left">
@@ -96,7 +94,7 @@
                         active ? 'bg-indigo-600 text-white' : 'text-gray-900',
                         'group flex w-full items-center rounded-md px-2 py-2 text-sm',
                       ]"
-                        @click="editUser(user)"
+                        @click="editCategory(category)"
                     >
                       <PencilIcon
                           :active="active"
@@ -112,7 +110,7 @@
                         active ? 'bg-indigo-600 text-white' : 'text-gray-900',
                         'group flex w-full items-center rounded-md px-2 py-2 text-sm',
                       ]"
-                        @click="deleteUser(user)"
+                        @click="deleteCategory(category)"
                     >
                       <TrashIcon
                           :active="active"
@@ -130,38 +128,6 @@
       </tr>
       </tbody>
     </table>
-
-    <div v-if="!users.loading" class="flex justify-between items-center mt-5">
-      <div v-if="users.data.length">
-        Showing from {{ users.from }} to {{ users.to }}
-      </div>
-      <nav
-          v-if="users.total > users.limit"
-          class="relative z-0 inline-flex justify-center rounded-md shadow-sm -space-x-px"
-          aria-label="Pagination"
-      >
-        <!-- Current: "z-10 bg-indigo-50 border-indigo-500 text-indigo-600", Default: "bg-white border-gray-300 text-gray-500 hover:bg-gray-50" -->
-        <a
-            v-for="(link, i) of users.links"
-            :key="i"
-            :disabled="!link.url"
-            href="#"
-            @click="getForPage($event, link)"
-            aria-current="page"
-            class="relative inline-flex items-center px-4 py-2 border text-sm font-medium whitespace-nowrap"
-            :class="[
-              link.active
-                ? 'z-10 bg-indigo-50 border-indigo-500 text-indigo-600'
-                : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50',
-              i === 0 ? 'rounded-l-md' : '',
-              i === users.links.length - 1 ? 'rounded-r-md' : '',
-              !link.url ? ' bg-gray-100 text-gray-700': ''
-            ]"
-            v-html="link.label"
-        >
-        </a>
-      </nav>
-    </div>
   </div>
 </template>
 
@@ -169,25 +135,23 @@
 import {computed, onMounted, ref} from "vue";
 import store from "../../store";
 import Spinner from "../../components/core/Spinner.vue";
-import {USERS_PER_PAGE} from "../../constants";
 import TableHeaderCell from "../../components/core/Table/TableHeaderCell.vue";
 import {Menu, MenuButton, MenuItem, MenuItems} from "@headlessui/vue";
 import {DotsVerticalIcon, PencilIcon, TrashIcon} from '@heroicons/vue/outline'
-import UserModal from "./UserModal.vue";
+import CategoryModal from "./CategoryModal.vue";
 
-const perPage = ref(USERS_PER_PAGE);
-const search = ref('');
-const users = computed(() => store.state.users);
+
+const categories = computed(() => store.state.categories);
 const sortField = ref('updated_at');
 const sortDirection = ref('desc')
 
-const user = ref({})
-const showUserModal = ref(false);
+const category = ref({})
+const showCategoryModal = ref(false);
 
 const emit = defineEmits(['clickEdit'])
 
 onMounted(() => {
-  getUsers();
+  getCategories();
 })
 
 function getForPage(ev, link) {
@@ -196,20 +160,18 @@ function getForPage(ev, link) {
     return;
   }
 
-  getUsers(link.url)
+  getCategories(link.url)
 }
 
-function getUsers(url = null) {
-  store.dispatch("getUsers", {
+function getCategories(url = null) {
+  store.dispatch("getCategories", {
     url,
-    search: search.value,
-    per_page: perPage.value,
     sort_field: sortField.value,
     sort_direction: sortDirection.value
   });
 }
 
-function sortUsers(field) {
+function sortCategories(field) {
   if (field === sortField.value) {
     if (sortDirection.value === 'desc') {
       sortDirection.value = 'asc'
@@ -221,25 +183,25 @@ function sortUsers(field) {
     sortDirection.value = 'asc'
   }
 
-  getUsers()
+  getCategories()
 }
 
 function showAddNewModal() {
-  showUserModal.value = true
+  showCategoryModal.value = true
 }
 
-function deleteUser(user) {
-  if (!confirm(`Are you sure you want to delete the user?`)) {
+function deleteCategory(category) {
+  if (!confirm(`Are you sure you want to delete the category?`)) {
     return
   }
-  store.dispatch('deleteUser', user.id)
+  store.dispatch('deleteCategory', category.id)
       .then(res => {
-        // TODO Show notification
-        store.dispatch('getUsers')
+        store.commit('showToast', 'Category was successfully deleted');
+        store.dispatch('getCategories')
       })
 }
 
-function editUser(p) {
+function editCategory(p) {
   emit('clickEdit', p)
 }
 </script>

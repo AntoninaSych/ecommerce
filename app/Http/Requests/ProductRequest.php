@@ -29,7 +29,7 @@ class ProductRequest extends FormRequest
             'deleted_images.*' => ['nullable', 'int'],
             'image_positions.*' => ['nullable', 'int'],
             'price' => ['required', 'numeric'],
-
+            'categories.*' => ['nullable', 'int', 'exists:categories,id'],
             'description' => ['nullable', 'string'],
             'published' => ['required', 'boolean']
         ];

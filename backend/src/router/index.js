@@ -5,6 +5,7 @@ import store from "../store/index.js";
 import ResetPassword from "../views/ResetPassword.vue";
 import AppLayout from "../components/AppLayout.vue";
 import Products from "../views/Products/Products.vue";
+import Categories from "../views/Categories/Categories.vue";
 import ProductForm from "../views/Products/ProductForm.vue";
 import CustomerView from "../views/Customers/CustomerView.vue";
 import Orders from "../views/Orders/Orders.vue";
@@ -36,6 +37,11 @@ const routes = [
                 path: 'products',
                 name: 'app.products',
                 component: Products
+            },
+            {
+                path: 'categories',
+                name: 'app.categories',
+                component: Categories
             },
             {
                 path: 'products/create',

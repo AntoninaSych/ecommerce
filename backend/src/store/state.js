@@ -60,6 +60,10 @@ const state = {
         {key: '3m', text: 'Last 3 Months'},
         {key: '6m', text: 'Last 6 Months'},
         {key: 'all', text: 'All Time'},
-    ]
+    ],
+    categories: {
+        loading: false,
+        data: []
+    }
 };
 export default state;

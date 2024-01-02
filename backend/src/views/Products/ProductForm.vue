@@ -15,6 +15,7 @@
           <CustomInput type="richtext" class="mb-2" v-model="product.description" label="Description"/>
           <CustomInput type="number" class="mb-2" v-model="product.price" label="Price" prepend="$"/>
           <CustomInput type="checkbox" class="mb-2" v-model="product.published" label="Published"/>
+          <treeselect v-model="product.categories" :multiple="true" :options="options" :errors="errors['categories']"/>
         </div>
         <div class="col-span-1 px-4 pt-5 pb-4">
           <image-preview v-model="product.images"
@@ -49,15 +50,18 @@
 
 <script setup>
 import {onMounted, ref} from 'vue'
+import Treeselect from 'vue3-treeselect'
+import 'vue3-treeselect/dist/vue3-treeselect.css'
 import CustomInput from "../../components/core/CustomInput.vue";
 import store from "../../store/index.js";
 import Spinner from "../../components/core/Spinner.vue";
 import {useRoute, useRouter} from "vue-router";
 import ImagePreview from "../../components/ImagePreview.vue";
+import axiosClient from "../../axios.js";
 
 const route = useRoute()
 const router = useRouter()
-
+const errors = ref({});
 const product = ref({
   id: null,
   title: null,
@@ -67,9 +71,11 @@ const product = ref({
   description: '',
   price: null,
   published: null,
+  categories: []
 })
 
 const loading = ref(false)
+const options = ref([])
 
 const emit = defineEmits(['update:modelValue', 'close'])
 
@@ -82,11 +88,16 @@ onMounted(() => {
           product.value = response.data
         })
   }
+
+  axiosClient.get('/categories/tree')
+      .then(result => {
+        options.value = result.data
+      })
 })
 
 function onSubmit($event, close = false) {
   loading.value = true
-
+  errors.value = {};
   if (product.value.id) {
     store.dispatch('updateProduct', product.value)
         .then(response => {
@@ -118,7 +129,7 @@ function onSubmit($event, close = false) {
         })
         .catch(err => {
           loading.value = false;
-          debugger;
+          errors.value = err.response.data.errors
         })
   }
 }
