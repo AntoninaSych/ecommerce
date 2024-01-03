@@ -94,13 +94,13 @@ class ProductController extends Controller
         $categories = $data['categories'] ?? [];
 
         $this->saveCategories($categories, $product);
-        $this->saveImages($images, $imagePositions, $product);
+
         if (count($deletedImages) > 0) {
             $this->deleteImages($deletedImages, $product);
         }
 
         $product->update($data);
-
+        $this->saveImages($images, $imagePositions, $product);
         return new ProductResource($product);
     }
 
@@ -153,7 +153,7 @@ class ProductController extends Controller
                 ->where('id', $id)
                 ->update(['position' => $position]);
         }
-
+        $i = 0;
         foreach ($images as $id => $image) {
             $path = 'images/' . Str::random();
             if (!Storage::exists($path)) {
@@ -171,7 +171,7 @@ class ProductController extends Controller
                 'url' => URL::to(Storage::url($relativePath)),
                 'mime' => $image->getClientMimeType(),
                 'size' => $image->getSize(),
-                'position' => $positions[$id] ?? $id + 1
+                'position' => count($positions) !== 0 ? $positions[$id] : $i + 1
             ]);
         }
     }
