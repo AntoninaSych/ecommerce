@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite --port=5175",
-    "build": "vite build",
+    "build": "vite build  --port=5175",
     "preview": "vite preview",
     "watch": "vite build --watch"
   },
