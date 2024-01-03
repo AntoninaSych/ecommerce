@@ -195,7 +195,7 @@ function deleteCategory(category) {
   if (!confirm(`Are you sure you want to delete the category?`)) {
     return
   }
-  store.dispatch('deleteCategory', category)
+  store.dispatch('deleteCategory', category.id)
       .then(res => {
         store.commit('showToast', 'Category was successfully deleted');
         store.dispatch('getCategories')
