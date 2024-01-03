@@ -105,6 +105,7 @@ export function updateProduct({commit}, product) {
         if (product.deleted_images) {
             product.deleted_images.forEach(id => form.append('deleted_images[]', id))
         }
+        console.log(product.image_positions);
         for (let id in product.image_positions) {
             form.append(`image_positions[${id}]`, product.image_positions[id])
         }

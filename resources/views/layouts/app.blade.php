@@ -1,13 +1,11 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel E-commerce') }}</title>
-
+    <title>{{ config('app.name', 'Laravel E-commerce Website') }}</title>
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -20,8 +18,8 @@
 <body>
 @include('layouts.navigation')
 
-<main class="p-5">
-    {{$slot}}
+<main>
+    {{ $slot }}
 </main>
 
 <!-- Toast -->
@@ -30,8 +28,9 @@
         x-show="visible"
         x-transition
         x-cloak
-        @notify.window="show($event.detail.message)"
-        class="fixed w-[400px] left-1/2 -ml-[200px] top-16 py-2 px-4 pb-4 bg-emerald-500 text-white"
+        @notify.window="show($event.detail.message, $event.detail.type || 'success')"
+        class="fixed w-[400px] left-1/2 -ml-[200px] top-16 py-2 px-4 pb-4 text-white"
+        :class="type === 'success' ? 'bg-emerald-500' : 'bg-red-500'"
 >
     <div class="font-semibold" x-text="message"></div>
     <button

@@ -60,7 +60,7 @@ const imagePositions = ref([])
 
 // Props & Emit
 const props = defineProps(['modelValue', 'deletedImages', 'images'])
-const emit = defineEmits(['update:modelValue', 'update:deletedImages', 'update:ImagePositions'])
+const emit = defineEmits(['update:modelValue', 'update:deletedImages', 'update:imagePositions'])
 
 // Computed
 
@@ -119,6 +119,7 @@ function revertImage(image) {
   if (image.isProp) {
     deletedImages.value = deletedImages.value.filter(id => id !== image.id)
     image.deleted = false;
+
     emit('update:deletedImages', deletedImages.value)
   }
 }
@@ -137,7 +138,7 @@ function updateImagePositions() {
       imageUrls.value.filter(im => !im.deleted)
           .map((im, ind) => [im.id, ind + 1])
   )
-  emit('update:ImagePositions', imagePositions.value)
+  emit('update:imagePositions', imagePositions.value)
 
 }
 

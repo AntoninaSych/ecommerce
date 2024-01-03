@@ -21,6 +21,7 @@ use App\Http\Controllers\OrderController;
 Route::middleware(['guestOrVerified'])->group(function () {
     Route::get('/', [FrontendProductController::class, 'index'])->name('product.index');
     Route::get('/product/{product:slug}', [FrontendProductController::class, 'show'])->name('product.show');
+    Route::get('/category/{category:slug}', [\App\Http\Controllers\ProductController::class, 'byCategory'])->name('byCategory');
 
     Route::prefix('/cart')->name('cart.')->group(function () {
         Route::get('/', [CartController::class, 'index'])->name('index');

@@ -15,15 +15,15 @@ import ProductsTable from "./ProductsTable.vue";
 import {ref} from "vue";
 import store from "../../store/index.js";
 import {data} from "autoprefixer";
-
-const INITIAL_OBJECT = {
-  id: '',
-  title: '',
-  image: '',
-  description: '',
-  price: ''
-
-}
+//
+// const INITIAL_OBJECT = {
+//   id: '',
+//   title: '',
+//   image: '',
+//   description: '',
+//   price: ''
+//
+// }
 
 
 

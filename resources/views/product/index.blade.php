@@ -1,4 +1,10 @@
+<?php
+/** @var \Illuminate\Database\Eloquent\Collection $products */
+$categoryList = \App\Models\Category::getActiveAsTree();
+
+?>
 <x-app-layout>
+    <x-category-list :category-list="$categoryList" class="-ml-15 -mt-15 -mr-15 px-4"/>
     <h2>Product List</h2>
     <!-- Product List -->
     <div class="grid gap-8 grig-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 p-5">

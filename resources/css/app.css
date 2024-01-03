@@ -39,7 +39,6 @@ body {
 }
 
 
-/*ckeditor*/
 .wysiwyg-content > blockquote,
 .wysiwyg-content > dl,
 .wysiwyg-content > dd,
@@ -77,15 +76,21 @@ body {
     font-weight: revert;
 }
 
-/*end ckeditor*/
+.table > tbody > tr > td,
+.table > thead > tr > th {
+    padding: 0.5rem;
+}
 
-/*.table > tbody > tr > td,*/
-/*.table > thead > tr > th {*/
-/*    padding: 0.5rem;*/
-/*}*/
+.table-sm > tbody > tr > td,
+.table-sm > thead > tr > th {
+    padding: 0.25rem;
+}
 
-/*.table-sm > tbody > tr > td,*/
-/*.table-sm > thead > tr > th {*/
-/*    padding: 0.25rem;*/
-/*}*/
+.category-list > .category-item:hover > .category-list {
+    display: flex;
+}
 
+.category-list > .category-item > .category-list > .category-item > .category-list {
+    left: 100%;
+    top: 0;
+}

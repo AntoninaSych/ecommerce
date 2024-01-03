@@ -77,7 +77,7 @@ const product = ref({
 const loading = ref(false)
 const options = ref([])
 
-const emit = defineEmits(['update:modelValue', 'close', 'update:ImagePositions'])
+const emit = defineEmits(['update:modelValue', 'close', 'update:imagePositions'])
 
 onMounted(() => {
   if (route.params.id) {
@@ -97,7 +97,7 @@ onMounted(() => {
 
 function onSubmit($event, close = false) {
   loading.value = true
-
+  errors.value = {};
   if (product.value.id) {
     store.dispatch('updateProduct', product.value)
         .then(response => {
