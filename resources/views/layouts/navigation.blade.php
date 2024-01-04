@@ -9,6 +9,7 @@
     <div>
         <a href="{{route('product.index')}}" class="block py-navbar-item pl-5"> Logo </a>
     </div>
+
     <!-- Responsive Menu -->
     <div
             class="block fixed z-10 top-0 bottom-0 height h-full w-[220px] transition-all bg-slate-900 md:hidden"

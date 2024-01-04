@@ -11,7 +11,8 @@ class ProductController extends Controller
 {
     public function index()
     {
-        $query = Product::query();
+        $query = Product::query()
+            ->select('products.*');
 
         return $this->renderProducts($query);
     }
