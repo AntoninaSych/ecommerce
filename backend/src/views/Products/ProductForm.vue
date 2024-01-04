@@ -11,10 +11,13 @@
     <form v-if="!loading" @submit.prevent="onSubmit">
       <div class="grid grid-cols-3">
         <div class="col-span-2 px-4 pt-5 pb-4">
-          <CustomInput class="mb-2" v-model="product.title" label="Product Title"/>
-          <CustomInput type="richtext" class="mb-2" v-model="product.description" label="Description"/>
-          <CustomInput type="number" class="mb-2" v-model="product.price" label="Price" prepend="$"/>
-          <CustomInput type="checkbox" class="mb-2" v-model="product.published" label="Published"/>
+          <CustomInput class="mb-2" v-model="product.title" label="Product Title" :errors="errors['title']"/>
+          <CustomInput type="richtext" class="mb-2" v-model="product.description" label="Description"
+                       :errors="errors['description']"/>
+          <CustomInput type="number" class="mb-2" v-model="product.price" label="Price" prepend="$"
+                       :errors="errors['price']"/>
+          <CustomInput type="checkbox" class="mb-2" v-model="product.published" label="Published"
+                       :errors="errors['published']"/>
           <treeselect v-model="product.categories" :multiple="true" :options="options" :errors="errors['categories']"/>
         </div>
         <div class="col-span-1 px-4 pt-5 pb-4">
@@ -70,7 +73,7 @@ const product = ref({
   image_positions: {},
   description: '',
   price: null,
-  published: null,
+  published: false,
   categories: []
 })
 
@@ -97,7 +100,7 @@ onMounted(() => {
 
 function onSubmit($event, close = false) {
   loading.value = true
-  errors.value = {};
+
   if (product.value.id) {
     store.dispatch('updateProduct', product.value)
         .then(response => {
@@ -110,6 +113,10 @@ function onSubmit($event, close = false) {
               router.push({name: 'app.products'})
             }
           }
+        })
+        .catch(err => {
+          loading.value = false;
+          errors.value = err.response.data.errors()
         })
   } else {
     store.dispatch('createProduct', product.value)
