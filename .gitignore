@@ -4,3 +4,5 @@
 /vendor/
 .env
 /vendor/*
+.vagrant
+/.vagrant/*
