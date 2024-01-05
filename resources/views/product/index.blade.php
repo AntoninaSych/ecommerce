@@ -4,7 +4,7 @@ $categoryList = \App\Models\Category::getActiveAsTree();
 
 ?>
 <x-app-layout>
-    <x-category-list :category-list="$categoryList" class="-ml-15 -mt-15 -mr-15 px-4"/>
+    <x-category-list :category-list="$categoryList" class="-ml-15 -mt-15 -mr-15 px-4 "/>
     {{--    <h2>Product List</h2>--}}
     <div class="p-3">
         <form action="" method="GET" class="flex-1" @submit.prevent="updateUrl">
